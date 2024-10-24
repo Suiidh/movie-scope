@@ -1,41 +1,52 @@
+import { GetServerSideProps } from 'next';
+import prisma from '../lib/prisma';  // Import du client Prisma
 import { useRouter } from 'next/router';
-import Layout from '../components/Layout';
 
-export default function FilmDetails() {
+type FilmProps = {
+  film: {
+    id: number;
+    titre: string;
+    image: string;
+    description: string;
+    duree: number;
+    avis: number;
+    dateSortie: string;
+  } | null;
+};
+
+const FilmDetails = ({ film }: FilmProps) => {
   const router = useRouter();
-  const { id } = router.query;
 
-  // Remplacer les données par une requête API ou des données statiques
-  const film = {
-    id,
-    title: 'Titre du Film',
-    synopsis: 'Voici le synopsis du film...',
-    cast: 'Acteurs principaux...',
-    director: 'Réalisateur...',
-    releaseYear: '2024',
-    trailerUrl: 'https://youtube.com/trailer',
-  };
+  // Si aucun film n'est trouvé, afficher un message d'erreur
+  if (!film) {
+    return <p>Film non trouvé.</p>;
+  }
 
   return (
-    <Layout>
-      <div className="container">
-        <h1>{film.title}</h1>
-        <img src={`/affiches/${id}.jpg`} alt={`Affiche du film ${film.title}`} />
-        <p>{film.synopsis}</p>
-        <p><strong>Réalisateur :</strong> {film.director}</p>
-        <p><strong>Année de sortie :</strong> {film.releaseYear}</p>
-        <p><strong>Acteurs :</strong> {film.cast}</p>
-
-        <section className="trailer">
-          <h2>Bande-annonce</h2>
-          <iframe width="560" height="315" src={film.trailerUrl} title="Bande-annonce" frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen></iframe>
-        </section>
-
-        <section className="reviews">
-          <h2>Critiques et Notes</h2>
-          {/* Section pour laisser une critique */}
-        </section>
-      </div>
-    </Layout>
+    <div>
+      <h1>{film.titre}</h1>
+      <img src={film.image} alt={film.titre} style={{ width: '100%' }} />
+      <p>{film.description}</p>
+      <p>Durée: {film.duree} minutes</p>
+      <p>Note moyenne: {film.avis}</p>
+      <p>Date de sortie: {new Date(film.dateSortie).toLocaleDateString()}</p>
+      <button onClick={() => router.back()}>Retour</button>
+    </div>
   );
-}
+};
+
+// Récupérer les détails d'un film selon son `id`
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { id } = context.params!;
+  const film = await prisma.film.findUnique({
+    where: { id: Number(id) },  // Récupère le film avec l'ID
+  });
+
+  return {
+    props: {
+      film: film ? JSON.parse(JSON.stringify(film)) : null,
+    },
+  };
+};
+
+export default FilmDetails;

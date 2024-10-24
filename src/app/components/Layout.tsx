@@ -29,7 +29,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       {/* Footer */}
       <footer>
         <p>© 2024 Lucas Martin - Tous droits réservés.</p>
-        <p>Suivez-moi sur <a href="#">Instagram</a> et <a href="#">Twitter</a>.</p>
       </footer>
 
       {/* Styles CSS simples */}

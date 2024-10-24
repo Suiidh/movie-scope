@@ -1,0 +1,26 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+model Film {
+  id          Int      @id @default(autoincrement())  // Clé primaire avec auto-incrémentation
+  titre       String                                // Titre du film, type String pour SQLite
+  image       String                                // URL ou chemin de l'image du film
+  description String?                               // Description ou synopsis du film (optionnel)
+  duree       Int                                   // Durée du film en minutes
+  avis        Float?   @default(0.0)                // Note moyenne du film (optionnel, par défaut à 0)
+  dateSortie  DateTime                              // Date de sortie du film
+
+  @@map("films")                                    // Renomme la table en "films"
+}
+
+
+
+
