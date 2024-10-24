@@ -1,76 +1,15 @@
-"use client";  // Indique que ce composant est un Client Component
+// src/app/components/Layout.tsx
 
-import React from 'react';
-import Link from 'next/link';
+import Navbar from './Navbar';
 
-type LayoutProps = {
-  children: React.ReactNode;  // Permet de recevoir le contenu des pages
-};
-
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <>
-      {/* Header */}
-      <header>
-        <nav>
-          <ul>
-            <li><Link href="/">Home</Link></li>
-            <li><Link href="/films">Films</Link></li>
-            <li><Link href="/about">À propos</Link></li>
-          </ul>
-        </nav>
-      </header>
-
-      {/* Main content */}
-      <main>
-        {children}
-      </main>
-
-      {/* Footer */}
-      <footer>
-        <p>© 2024 Lucas Martin - Tous droits réservés.</p>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <Navbar />  {/* Barre de navigation */}
+      <main style={{ flex: '1' }}>{children}</main> {/* Contenu principal */}
+      <footer style={{ padding: '1rem', backgroundColor: '#333', color: 'white', textAlign: 'center' }}>
+        <p>© 2024 Mon Blog de Films</p>
       </footer>
-
-      {/* Styles CSS simples */}
-      <style jsx>{`
-        header {
-          background-color: #333;
-          color: white;
-          padding: 20px;
-          text-align: center;
-        }
-
-        nav ul {
-          list-style: none;
-          display: flex;
-          justify-content: center;
-        }
-
-        nav ul li {
-          margin: 0 15px;
-        }
-
-        nav ul li a {
-          color: white;
-          text-decoration: none;
-        }
-
-        main {
-          padding: 20px;
-        }
-
-        footer {
-          background-color: #333;
-          color: white;
-          text-align: center;
-          padding: 20px;
-          position: fixed;
-          bottom: 0;
-          width: 100%;
-        }
-      `}</style>
-    </>
+    </div>
   );
-};
-
-export default Layout;
+}
