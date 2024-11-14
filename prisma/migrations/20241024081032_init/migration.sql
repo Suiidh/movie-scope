@@ -8,3 +8,9 @@ CREATE TABLE "films" (
     "avis" REAL DEFAULT 0.0,
     "dateSortie" DATETIME NOT NULL
 );
+CREATE TABLE "users" (
+     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+     "nom_users" TEXT NOT NULL,
+     "mdp" TEXT NOT NULL,
+     "email" TEXT NOT NULL UNIQUE
+);
