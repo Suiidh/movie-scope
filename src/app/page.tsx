@@ -41,12 +41,10 @@ export default async function Home() {
     <Layout>
       <div className="container">
         <section className="recent-movies">
-          <h2>Films Récents</h2>
           <FilmList films={recentMovies} />
         </section>
 
         <section className="recommendations">
-          <h2>Mes Recommandations</h2>
           <FilmList films={recommendedMovies} />
         </section>
       </div>

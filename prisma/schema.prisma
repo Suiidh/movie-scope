@@ -20,6 +20,13 @@ model Film {
 
   @@map("films")                                    // Renomme la table en "films"
 }
+model User {
+  id        Int    @id @default(autoincrement()) // Id auto-incrémenté
+  nomUsers  String @map("nom_users")             // Correspond au champ nom_users
+  mdp       String                                // Champ mdp
+  email     String @unique                       // Champ email unique
+}
+
 
 
 
