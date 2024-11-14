@@ -19,11 +19,7 @@ async function fetchFilms() {
     orderBy: {
       dateSortie: 'desc',
     },
-<<<<<<< HEAD
     take: 6,
-=======
-    take: 7,
->>>>>>> 68a2317e074e3880d75877b699c1ee6dfde78013
   });
 
   const recommendedMovies = await prisma.film.findMany({
@@ -32,11 +28,7 @@ async function fetchFilms() {
         gte: 4.5,
       },
     },
-<<<<<<< HEAD
     take: 6,
-=======
-    take: 5,
->>>>>>> 68a2317e074e3880d75877b699c1ee6dfde78013
   });
 
   return { recentMovies, recommendedMovies };
