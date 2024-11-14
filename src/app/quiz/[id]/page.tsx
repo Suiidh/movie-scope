@@ -25,10 +25,13 @@ const QuizPage = () => {
 
     // Fonction pour gérer la sélection de réponse
     const handleAnswerChange = (questionId: string, selectedAnswer: string) => {
-        setAnswers({
-            ...answers,
-            [questionId]: selectedAnswer,
-        });
+        // Ne permet pas de modifier les réponses une fois que le quiz est soumis
+        if (!hasSubmitted) {
+            setAnswers({
+                ...answers,
+                [questionId]: selectedAnswer,
+            });
+        }
     };
 
     // Fonction pour valider les réponses et calculer le score
@@ -76,6 +79,7 @@ const QuizPage = () => {
                                             checked={answers[question.id] === option}
                                             onChange={() => handleAnswerChange(question.id, option)}
                                             className="mr-2"
+                                            disabled={hasSubmitted}  // Désactive les radios une fois que l'utilisateur a soumis
                                         />
                                         <label htmlFor={`q${index}-option${idx}`} className="text-sm text-gray-700">{option}</label>
                                     </div>
@@ -88,7 +92,7 @@ const QuizPage = () => {
                                     {/* Si la réponse est incorrecte, affichez l'option incorrecte en rouge */}
                                     {answers[question.id] !== question.answer && (
                                         <p className="text-sm text-red-500">
-                                            {`Mauvaise réponse : "${answers[question.id]}"`}
+                                            {`Mauvaise réponse !`}
                                         </p>
                                     )}
 
@@ -116,6 +120,7 @@ const QuizPage = () => {
                     <button
                         onClick={validateAnswers}
                         className="px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg text-sm"
+                        disabled={hasSubmitted}  // Désactive le bouton "Valider" une fois qu'il est cliqué
                     >
                         Valider
                     </button>
