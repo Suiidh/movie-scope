@@ -18,7 +18,7 @@ export default function Navbar() {
             </Link>
           </li>
           <li>
-            <Link href="/Quiz" style={{color: 'white', textDecoration: 'none'}}>
+            <Link href="/quiz" style={{color: 'white', textDecoration: 'none'}}>
               Quiz
             </Link>
           </li>
