@@ -1,41 +1,53 @@
-// src/app/page.tsx
-
+// src/app/page.tsx (sans "use client")
 import Layout from './components/Layout';
+import prisma from './lib/prisma'; // Assurez-vous que prisma est bien configuré
+import FilmList from './components/FilmList'; // Composant client pour afficher les films
 
-export default function Home() {
+type Film = {
+  id: number;
+  titre: string;
+  image: string;
+  description: string;
+  duree: number;
+  avis: number;
+  dateSortie: string;
+};
+
+// Fonction de récupération des données depuis la base de données
+async function fetchFilms() {
+  const recentMovies = await prisma.film.findMany({
+    orderBy: {
+      dateSortie: 'desc',
+    },
+    take: 7,
+  });
+
+  const recommendedMovies = await prisma.film.findMany({
+    where: {
+      avis: {
+        gte: 4.5,
+      },
+    },
+    take: 5,
+  });
+
+  return { recentMovies, recommendedMovies };
+}
+
+export default async function Home() {
+  const { recentMovies, recommendedMovies } = await fetchFilms();
+
   return (
     <Layout>
       <div className="container">
         <section className="recent-movies">
           <h2>Films Récents</h2>
-          <div className="grid">
-            <div className="movie-card">
-              <img src="/affiche1.jpg" alt="Film 1" />
-              <h3>Titre du Film 1</h3>
-              <p>Résumé court du film...</p>
-            </div>
-            <div className="movie-card">
-              <img src="/affiche2.jpg" alt="Film 2" />
-              <h3>Titre du Film 2</h3>
-              <p>Résumé court du film...</p>
-            </div>
-          </div>
+          <FilmList films={recentMovies} />
         </section>
 
         <section className="recommendations">
           <h2>Mes Recommandations</h2>
-          <div className="grid">
-            <div className="movie-card">
-              <img src="/affiche3.jpg" alt="Film recommandé" />
-              <h3>Film Recommandé 1</h3>
-              <button>Voir les détails</button>
-            </div>
-            <div className="movie-card">
-              <img src="/affiche4.jpg" alt="Film recommandé" />
-              <h3>Film Recommandé 2</h3>
-              <button>Voir les détails</button>
-            </div>
-          </div>
+          <FilmList films={recommendedMovies} />
         </section>
       </div>
     </Layout>
