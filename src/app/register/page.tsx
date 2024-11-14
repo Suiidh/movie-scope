@@ -2,12 +2,14 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const router = useRouter();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -75,6 +77,21 @@ export default function RegisterPage() {
                     }}
                 >
                     S'inscrire
+                </button>
+                <button
+                    type="button"
+                    onClick={() => router.back()}
+                    style={{
+                        marginTop: '10px',
+                        padding: '10px',
+                        border: '1px solid #333',
+                        borderRadius: '5px',
+                        backgroundColor: 'transparent',
+                        color: '#333',
+                        cursor: 'pointer',
+                    }}
+                >
+                    Retour
                 </button>
                 <p style={{ marginTop: '1rem', textAlign: 'center' }}>
                     Déjà un compte ? <Link href="/login" style={{ color: '#333', textDecoration: 'underline' }}>Connectez-vous</Link>

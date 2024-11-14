@@ -31,7 +31,6 @@ const layoutStyles = {
 };
 
 const containerStyles = {
-    maxWidth: '400px',
     width: '100%',
     backgroundColor: 'white',
     borderRadius: '8px',
