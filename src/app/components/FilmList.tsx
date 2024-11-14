@@ -51,7 +51,7 @@ const FilmList = ({ films }: FilmListProps) => {
         }
         .movie-image {
           width: 100%;
-          height: auto;
+          height: 250px; /* Taille fixe pour la hauteur */
           object-fit: cover;
         }
         .movie-info {

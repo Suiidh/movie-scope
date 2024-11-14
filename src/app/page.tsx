@@ -19,7 +19,7 @@ async function fetchFilms() {
     orderBy: {
       dateSortie: 'desc',
     },
-    take: 7,
+    take: 6,
   });
 
   const recommendedMovies = await prisma.film.findMany({
@@ -28,7 +28,7 @@ async function fetchFilms() {
         gte: 4.5,
       },
     },
-    take: 5,
+    take: 6,
   });
 
   return { recentMovies, recommendedMovies };
