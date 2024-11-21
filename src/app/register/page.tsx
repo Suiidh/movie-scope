@@ -9,12 +9,47 @@ export default function RegisterPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState(''); // Nouveau state pour afficher le succès
     const router = useRouter();
 
-    const handleSubmit = (e: React.FormEvent) => {
+    // Fonction pour gérer la soumission
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Logique d'inscription à implémenter ici
-        console.log('Inscription soumise:', { username, email, password, confirmPassword });
+
+        // Validation des mots de passe
+        if (password !== confirmPassword) {
+            setError('Les mots de passe ne correspondent pas.');
+            setSuccessMessage(''); // Efface le message de succès si présent
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, email, password }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Si l'inscription réussit
+                setError('');
+                setSuccessMessage('Inscription réussie ! Vous allez être redirigé.');
+                setTimeout(() => {
+                    router.push('/login'); // Redirection vers la page de connexion
+                }, 2000); // Délai pour permettre à l'utilisateur de lire le message
+            } else {
+                // Si une erreur survient
+                setError(data.message || 'Erreur lors de l\'inscription.');
+                setSuccessMessage(''); // Efface le message de succès si présent
+            }
+        } catch (err) {
+            console.error('Erreur lors de l\'inscription:', err);
+            setError('Erreur interne du serveur.');
+            setSuccessMessage('');
+        }
     };
 
     return (
@@ -29,10 +64,12 @@ export default function RegisterPage() {
                     padding: '2rem',
                     borderRadius: '10px',
                     backgroundColor: '#f9f9f9',
-                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
+                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                 }}
             >
                 <h2 style={{ marginBottom: '1rem', textAlign: 'center' }}>Inscription</h2>
+                {error && <p style={{ color: 'red', marginBottom: '10px' }}>{error}</p>}
+                {successMessage && <p style={{ color: 'green', marginBottom: '10px' }}>{successMessage}</p>}
                 <input
                     type="text"
                     placeholder="Nom d'utilisateur"
@@ -94,7 +131,10 @@ export default function RegisterPage() {
                     Retour
                 </button>
                 <p style={{ marginTop: '1rem', textAlign: 'center' }}>
-                    Déjà un compte ? <Link href="/login" style={{ color: '#333', textDecoration: 'underline' }}>Connectez-vous</Link>
+                    Déjà un compte ?{' '}
+                    <Link href="/login" style={{ color: '#333', textDecoration: 'underline' }}>
+                        Connectez-vous
+                    </Link>
                 </p>
             </form>
         </div>
