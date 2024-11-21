@@ -1,5 +1,4 @@
-// pages/create-quiz.tsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 const CreateQuizPage = () => {
@@ -8,6 +7,20 @@ const CreateQuizPage = () => {
     const [imageUrl, setImageUrl] = useState('');
     const [questions, setQuestions] = useState([{ question: '', options: ['', '', '', ''], answer: '' }]);
     const router = useRouter();
+    const [quizzes, setQuizzes] = useState<any[]>([]);
+
+    // Charger les quizzes existants depuis localStorage au démarrage
+    useEffect(() => {
+        const storedQuizzes = JSON.parse(localStorage.getItem('quizzes') || '[]');
+        setQuizzes(storedQuizzes);
+    }, []);
+
+    // Sauvegarder les quizzes dans localStorage
+    useEffect(() => {
+        if (quizzes.length > 0) {
+            localStorage.setItem('quizzes', JSON.stringify(quizzes));
+        }
+    }, [quizzes]);
 
     // Fonction pour gérer l'ajout de questions
     const handleQuestionChange = (index: number, field: string, value: string) => {
@@ -24,15 +37,10 @@ const CreateQuizPage = () => {
         setQuestions(newQuestions);
     };
 
-    // Fonction pour ajouter une nouvelle question
     const addQuestion = () => {
-        setQuestions([
-            ...questions,
-            { question: '', options: ['', '', '', ''], answer: '' }
-        ]);
+        setQuestions([...questions, { question: '', options: ['', '', '', ''], answer: '' }]);
     };
 
-    // Fonction pour supprimer une question
     const deleteQuestion = (index: number) => {
         const newQuestions = questions.filter((_, i) => i !== index);
         setQuestions(newQuestions);
@@ -49,10 +57,9 @@ const CreateQuizPage = () => {
             questions
         };
 
-        // Sauvegarder le quiz dans localStorage
-        const quizzes = JSON.parse(localStorage.getItem('quizzes') || '[]');
-        quizzes.push(quiz);
-        localStorage.setItem('quizzes', JSON.stringify(quizzes));
+        // Ajouter le quiz à la liste
+        const updatedQuizzes = [...quizzes, quiz];
+        setQuizzes(updatedQuizzes);
 
         // Rediriger vers la page du quiz créé
         router.push(`/quiz/${quiz.id}`);
@@ -62,6 +69,7 @@ const CreateQuizPage = () => {
         <div className="flex flex-col items-center min-h-screen px-4 sm:px-8 pb-8">
             <h1 className="text-2xl font-bold text-gray-800 mt-6">Créer un Quiz</h1>
             <form onSubmit={handleSubmit} className="w-full max-w-lg mt-8">
+                {/* Champs du quiz */}
                 <input
                     type="text"
                     placeholder="Titre du quiz"
