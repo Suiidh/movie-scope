@@ -30,7 +30,7 @@ export default function About() {
                         Bienvenue sur notre blog de cinéma où l'on partage nos avis et critiques sur divers films. Ici, vous trouverez des recommandations, des analyses et des discussions autour des œuvres cinématographiques que nous aimons et découvrons.
                     </p>
                     <p className="text-lg text-gray-700 mb-6">
-                        Ce blog a été créé par <strong>Lucas Martin</strong>,<strong>Enzo Marion</strong>,<strong>Jordan Pipet</strong>, des passionnés de cinéma qui aime explorer chaque aspect du 7e art. Que vous soyez amateur de films classiques ou de nouveautés, vous trouverez ici une source d'inspiration pour vos prochaines séances cinéma. Alors n'hésitez pas à partager vos avis avec nous.
+                        Ce blog a été créé par <strong>Lucas Martin</strong>,<strong>Enzo Marion</strong>,<strong>Jordan Pipet</strong>, des passionnés de cinéma qui aiment explorer chaque aspect du 7e art. Que vous soyez amateur de films classiques ou de nouveautés, vous trouverez ici une source d'inspiration pour vos prochaines séances cinéma. Alors n'hésitez pas à partager vos avis avec nous.
                     </p>
 
                     <h2 className="text-2xl font-semibold text-gray-800 mb-4">Faites-nous une suggestion !</h2>
