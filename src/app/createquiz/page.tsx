@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 const CreateQuizPage = () => {
     const [title, setTitle] = useState('');
@@ -11,29 +13,35 @@ const CreateQuizPage = () => {
 
     // Charger les quizzes existants depuis localStorage au démarrage
     useEffect(() => {
-        const storedQuizzes = JSON.parse(localStorage.getItem('quizzes') || '[]');
-        setQuizzes(storedQuizzes);
+        if (typeof window !== "undefined") {
+            const storedQuizzes = JSON.parse(localStorage.getItem('quizzes') || '[]');
+            setQuizzes(storedQuizzes);
+        }
     }, []);
 
     // Sauvegarder les quizzes dans localStorage
     useEffect(() => {
-        if (quizzes.length > 0) {
+        if (typeof window !== "undefined" && quizzes.length > 0) {
             localStorage.setItem('quizzes', JSON.stringify(quizzes));
         }
     }, [quizzes]);
 
-    // Fonction pour gérer l'ajout de questions
-    const handleQuestionChange = (index: number, field: string, value: string) => {
+    const handleQuestionChange = (
+        questionIndex: number,
+        field: string,
+        value: string,
+        optionIndex?: number
+    ) => {
         const newQuestions = [...questions];
+
         if (field === 'question') {
-            newQuestions[index].question = value;
-        } else if (field === 'option') {
-            newQuestions[index].options = newQuestions[index].options.map((opt, idx) =>
-                idx === parseInt(value) ? value : opt
-            );
+            newQuestions[questionIndex].question = value;
+        } else if (field === 'option' && optionIndex !== undefined) {
+            newQuestions[questionIndex].options[optionIndex] = value;
         } else if (field === 'answer') {
-            newQuestions[index].answer = value;
+            newQuestions[questionIndex].answer = value;
         }
+
         setQuestions(newQuestions);
     };
 
@@ -69,7 +77,6 @@ const CreateQuizPage = () => {
         <div className="flex flex-col items-center min-h-screen px-4 sm:px-8 pb-8">
             <h1 className="text-2xl font-bold text-gray-800 mt-6">Créer un Quiz</h1>
             <form onSubmit={handleSubmit} className="w-full max-w-lg mt-8">
-                {/* Champs du quiz */}
                 <input
                     type="text"
                     placeholder="Titre du quiz"
@@ -111,7 +118,7 @@ const CreateQuizPage = () => {
                                     type="text"
                                     placeholder={`Option ${idx + 1}`}
                                     value={opt}
-                                    onChange={(e) => handleQuestionChange(index, 'option', `${idx}`)}
+                                    onChange={(e) => handleQuestionChange(index, 'option', e.target.value, idx)}
                                     className="w-full p-2 mb-2 border border-gray-300 rounded"
                                     required
                                 />
