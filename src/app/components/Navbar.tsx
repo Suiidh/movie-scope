@@ -1,8 +1,26 @@
-// src/app/components/Navbar.tsx
-
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function Navbar() {
+  const [user, setUser] = useState<{ name: string } | null>(null);
+
+  useEffect(() => {
+    // Récupérer le token dans le localStorage ou le cookie
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      // Décoder le token pour obtenir les données de l'utilisateur
+      const decodedToken = JSON.parse(atob(token.split('.')[1])); // Décodage du JWT
+      setUser({ name: decodedToken.name });
+    }
+  }, []);
+
+  const handleLogout = () => {
+    // Effacer le token du localStorage (ou du cookie)
+    localStorage.removeItem('token');
+    setUser(null);
+  };
+
   return (
       <nav style={navStyles}>
         <div style={navContainerStyles}>
@@ -23,10 +41,19 @@ export default function Navbar() {
             <li><Link href="/about" style={linkStyles}>À propos</Link></li>
           </ul>
 
-          {/* Boutons de connexion et inscription à droite */}
+          {/* Afficher le nom de l'utilisateur et le bouton de déconnexion si l'utilisateur est connecté */}
           <div style={authButtonsStyles}>
-            <Link href="/login" style={authButtonStyles}>Connexion</Link>
-            <Link href="/register" style={{ ...authButtonStyles, backgroundColor: '#28a745' }}>Inscription</Link>
+            {!user ? (
+                <>
+                  <Link href="/login" style={authButtonStyles}>Connexion</Link>
+                  <Link href="/register" style={{ ...authButtonStyles, backgroundColor: '#28a745' }}>Inscription</Link>
+                </>
+            ) : (
+                <>
+                  <span style={userNameStyles}>{user.name}</span>
+                  <button onClick={handleLogout} style={logoutButtonStyles}>Déconnexion</button>
+                </>
+            )}
           </div>
         </div>
       </nav>
@@ -35,13 +62,13 @@ export default function Navbar() {
 
 // Styles en objet JavaScript
 const navStyles = {
-  padding: '1rem 2rem', // Plus de padding horizontal pour plus d'espace
+  padding: '1rem 2rem',
   backgroundColor: '#333',
   color: 'white',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Ajout d'une légère ombre pour un effet flottant
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
 };
 
 const navContainerStyles = {
@@ -49,71 +76,81 @@ const navContainerStyles = {
   justifyContent: 'space-between',
   alignItems: 'center',
   width: '100%',
-  maxWidth: '1200px', // Limite la largeur du container
+  maxWidth: '1200px',
 };
 
 const logoStyles = {
-  flex: 1, // Logo à gauche
+  flex: 1,
 };
 
 const logoImageStyles = {
-  height: '40px', // Ajustez la taille du logo
+  height: '40px',
   width: 'auto',
 };
 
 const navLinksStyles = {
   display: 'flex',
   listStyle: 'none',
-  gap: '30px', // Plus d'espace entre les liens
+  gap: '30px',
   margin: 0,
   padding: 0,
-  flex: 2, // Pour que le menu soit centré
+  flex: 2,
   justifyContent: 'center',
 };
 
 const linkStyles = {
   color: 'white',
   textDecoration: 'none',
-  fontSize: '18px', // Augmenter la taille de la police
+  fontSize: '18px',
   fontWeight: 'bold',
-  padding: '10px 15px', // Augmenter le padding pour plus d'espace
-  borderRadius: '5px', // Coins arrondis pour les liens
-  transition: 'background-color 0.3s ease, color 0.3s ease', // Ajout d'une transition douce
+  padding: '10px 15px',
+  borderRadius: '5px',
+  transition: 'background-color 0.3s ease, color 0.3s ease',
 };
 
 linkStyles[':hover'] = {
-  backgroundColor: '#555', // Change la couleur de fond au survol
-  color: '#fff', // Garde la couleur du texte blanche lors du survol
+  backgroundColor: '#555',
+  color: '#fff',
 };
 
 const authButtonsStyles = {
   display: 'flex',
-  gap: '15px', // Plus d'espace entre les boutons
+  gap: '15px',
 };
 
 const authButtonStyles = {
   backgroundColor: '#007bff',
   color: 'white',
-  padding: '10px 20px', // Plus de padding pour les boutons
+  padding: '10px 20px',
   borderRadius: '5px',
   textDecoration: 'none',
   fontWeight: 'bold',
-  transition: 'background-color 0.3s, transform 0.3s', // Ajout de transition pour effet de survol
+  transition: 'background-color 0.3s, transform 0.3s',
   textAlign: 'center',
 };
 
 authButtonStyles[':hover'] = {
   backgroundColor: '#0056b3',
-  transform: 'scale(1.05)', // Légère augmentation de la taille au survol
+  transform: 'scale(1.05)',
 };
 
-// Optionnel: Pour changer la couleur de fond de l'inscription
-const registerButtonStyles = {
-  ...authButtonStyles,
-  backgroundColor: '#28a745', // Vert pour inscription
+const userNameStyles = {
+  color: 'white',
+  fontWeight: 'bold',
+  fontSize: '18px',
 };
 
-registerButtonStyles[':hover'] = {
-  backgroundColor: '#218838',
+const logoutButtonStyles = {
+  backgroundColor: '#dc3545',
+  color: 'white',
+  padding: '10px 20px',
+  borderRadius: '5px',
+  fontWeight: 'bold',
+  cursor: 'pointer',
+  transition: 'background-color 0.3s, transform 0.3s',
+};
+
+logoutButtonStyles[':hover'] = {
+  backgroundColor: '#c82333',
   transform: 'scale(1.05)',
 };
