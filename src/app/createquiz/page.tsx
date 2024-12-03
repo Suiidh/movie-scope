@@ -1,89 +1,50 @@
-// CreateQuizPage.tsx
-'use client';
+"use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";  // Utilisé pour rediriger après soumission
+import { useRouter } from "next/navigation";
 
 const CreateQuizPage = () => {
-  const [questions, setQuestions] = useState([
-    { question: "", options: ["", "", "", ""], answer: "" },
-  ]);
-  const [quizTitle, setQuizTitle] = useState("");  // Nouveau champ pour le titre du quiz
-  const [quizDescription, setQuizDescription] = useState("");  // Nouveau champ pour la description du quiz
-  const [image, setImage] = useState<File | null>(null); // État pour l'image
+  const [quizTitle, setQuizTitle] = useState("");
+  const [quizDescription, setQuizDescription] = useState("");
+  const [questions, setQuestions] = useState([{ question: "", options: ["", "", "", ""], answer: "" }]);
+  const [image, setImage] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  // Fonction pour gérer les changements dans les champs de la question
-  const handleQuestionChange = (
-    index: number,
-    field: "question" | "answer",
-    value: string
-  ) => {
+  const handleQuestionChange = (index: number, field: "question" | "answer", value: string) => {
     const updatedQuestions = [...questions];
     updatedQuestions[index][field] = value;
     setQuestions(updatedQuestions);
   };
 
-  // Fonction pour gérer les changements dans les options
   const handleOptionChange = (index: number, optionIndex: number, value: string) => {
     const updatedQuestions = [...questions];
     updatedQuestions[index].options[optionIndex] = value;
     setQuestions(updatedQuestions);
   };
 
-  // Fonction pour ajouter une nouvelle question
-  const handleAddQuestion = () => {
-    setQuestions([
-      ...questions,
-      { question: "", options: ["", "", "", ""], answer: "" },
-    ]);
+  const addQuestion = () => setQuestions([...questions, { question: "", options: ["", "", "", ""], answer: "" }]);
+  const removeQuestion = (index: number) => setQuestions(questions.filter((_, i) => i !== index));
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) setImage(e.target.files[0]);
   };
 
-  // Fonction pour supprimer une question
-  const handleRemoveQuestion = (index: number) => {
-    const updatedQuestions = [...questions];
-    updatedQuestions.splice(index, 1);
-    setQuestions(updatedQuestions);
-  };
-
-  // Fonction pour gérer le changement d'image
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setImage(e.target.files[0]);
-    }
-  };
-
-  // Fonction pour envoyer le quiz au serveur
-  const handleSaveQuiz = async () => {
+  const saveQuiz = async () => {
     if (isLoading) return;
 
     setIsLoading(true);
-
-    const quizData = {
-      title: quizTitle,
-      description: quizDescription,
-      questions,
-    };
+    const quizData = { title: quizTitle, description: quizDescription, questions };
 
     try {
-      // 1. Envoi des données JSON séparées
       const response = await fetch("/api/quizz", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(quizData),
       });
 
-      if (!response.ok) {
-        throw new Error("Erreur lors de la création du quiz.");
-      }
+      if (!response.ok) throw new Error("Erreur lors de l'enregistrement du quiz");
 
-      const data = await response.json();
-      console.log("Quiz créé avec succès", data);
-
-      // 2. Envoi de l'image si elle existe
       if (image) {
         const formData = new FormData();
         formData.append("image", image);
@@ -93,130 +54,109 @@ const CreateQuizPage = () => {
           body: formData,
         });
 
-        if (!imageResponse.ok) {
-          throw new Error("Erreur lors de l'upload de l'image.");
-        }
-
-        console.log("Image uploadée avec succès.");
+        if (!imageResponse.ok) throw new Error("Erreur lors de l'upload de l'image");
       }
 
-      // Rediriger vers la page des quiz après la soumission
-      router.push("/quiz");
+      router.push("/quiz?created=true");
     } catch (error) {
-      console.error("Erreur lors de la sauvegarde du quiz:", error);
+      console.error("Erreur lors de la sauvegarde :", error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  return (
-    <div className="max-w-4xl mx-auto p-8 bg-white shadow-md rounded-lg">
-      <h1 className="text-3xl font-semibold text-center mb-6">Créer un Quiz</h1>
+  const isFormValid = () =>
+    quizTitle && quizDescription && questions.every(q => q.question && q.answer);
 
-      {/* Titre du quiz */}
+  return (
+    <div className="max-w-4xl mx-auto p-8 bg-white shadow rounded text-black">
+      <h1 className="text-3xl font-bold mb-6 text-center">Créer un Quiz</h1>
+
       <div className="mb-4">
-        <label className="block text-lg font-medium">Titre du Quiz</label>
+        <label className="block text-lg font-medium text-black">Titre du Quiz</label>
         <input
           type="text"
+          className="w-full mt-2 p-3 border rounded"
+          placeholder="Entrez le titre du quiz"
           value={quizTitle}
           onChange={(e) => setQuizTitle(e.target.value)}
-          placeholder="Entrez le titre du quiz"
-          className="w-full p-3 mt-2 border border-gray-300 rounded-md"
         />
       </div>
 
-      {/* Description du quiz */}
       <div className="mb-4">
-        <label className="block text-lg font-medium">Description du Quiz</label>
+        <label className="block text-lg font-medium text-black">Description</label>
         <textarea
+          className="w-full mt-2 p-3 border rounded"
+          placeholder="Entrez une description"
           value={quizDescription}
           onChange={(e) => setQuizDescription(e.target.value)}
-          placeholder="Entrez une description pour votre quiz"
-          className="w-full p-3 mt-2 border border-gray-300 rounded-md"
         />
       </div>
 
-      {/* Champ d'upload de l'image */}
       <div className="mb-4">
-        <label className="block text-lg font-medium">Image du Quiz</label>
+        <label className="block text-lg font-medium text-black">Image du Quiz</label>
         <input
           type="file"
-          onChange={handleImageChange}
-          className="w-full p-3 mt-2 border border-gray-300 rounded-md"
+          className="w-full mt-2"
+          onChange={handleImageUpload}
         />
       </div>
 
-      {/* Liste des questions */}
       {questions.map((q, index) => (
         <div key={index} className="mb-6">
-          <div className="mb-4">
-            <label className="block text-lg font-medium">Question {index + 1}</label>
+          <label className="block text-lg font-medium text-black">Question {index + 1}</label>
+          <input
+            type="text"
+            className="w-full mt-2 p-3 border rounded"
+            placeholder="Entrez la question"
+            value={q.question}
+            onChange={(e) => handleQuestionChange(index, "question", e.target.value)}
+          />
+
+          <label className="block mt-4 text-lg font-medium text-black">Options</label>
+          {q.options.map((option, i) => (
             <input
+              key={i}
               type="text"
-              value={q.question}
-              onChange={(e) => handleQuestionChange(index, "question", e.target.value)}
-              placeholder="Entrez votre question"
-              className="w-full p-3 mt-2 border border-gray-300 rounded-md"
+              className="w-full mt-2 p-2 border rounded"
+              placeholder={`Option ${i + 1}`}
+              value={option}
+              onChange={(e) => handleOptionChange(index, i, e.target.value)}
             />
-          </div>
+          ))}
 
-          {/* Options */}
-          <div className="mb-4">
-            <label className="block text-lg font-medium">Options</label>
-            {q.options.map((option, optionIndex) => (
-              <input
-                key={optionIndex}
-                type="text"
-                value={option}
-                onChange={(e) => handleOptionChange(index, optionIndex, e.target.value)}
-                placeholder={`Option ${optionIndex + 1}`}
-                className="w-full p-3 mt-2 border border-gray-300 rounded-md mb-2"
-              />
-            ))}
-          </div>
+          <label className="block mt-4 text-lg font-medium text-black">Réponse Correcte</label>
+          <input
+            type="text"
+            className="w-full mt-2 p-3 border rounded"
+            placeholder="Entrez la réponse correcte"
+            value={q.answer}
+            onChange={(e) => handleQuestionChange(index, "answer", e.target.value)}
+          />
 
-          {/* Réponse correcte */}
-          <div className="mb-4">
-            <label className="block text-lg font-medium">Réponse correcte</label>
-            <input
-              type="text"
-              value={q.answer}
-              onChange={(e) => handleQuestionChange(index, "answer", e.target.value)}
-              placeholder="Entrez la réponse correcte"
-              className="w-full p-3 mt-2 border border-gray-300 rounded-md"
-            />
-          </div>
-
-          {/* Bouton pour supprimer la question */}
           <button
-            type="button"
-            onClick={() => handleRemoveQuestion(index)}
-            className="px-4 py-2 text-white bg-red-500 rounded-md mt-4 hover:bg-red-600"
+            onClick={() => removeQuestion(index)}
+            className="mt-4 px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600"
           >
-            Supprimer la question
+            Supprimer
           </button>
         </div>
       ))}
 
-      {/* Bouton pour ajouter une nouvelle question */}
       <button
-        type="button"
-        onClick={handleAddQuestion}
-        className="px-4 py-2 text-white bg-blue-500 rounded-md mt-4 hover:bg-blue-600"
+        onClick={addQuestion}
+        className="mb-6 px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
       >
         Ajouter une question
       </button>
 
-      {/* Bouton pour sauvegarder le quiz */}
-      <div className="mt-8 flex justify-center">
-        <button
-          onClick={handleSaveQuiz}
-          disabled={isLoading || !quizTitle || !quizDescription || questions.some(q => !q.question || !q.answer)}
-          className={`px-6 py-3 text-white rounded-lg ${isLoading ? "bg-gray-400" : "bg-green-500 hover:bg-green-600"}`}
-        >
-          {isLoading ? "Enregistrement..." : "Sauvegarder le quiz"}
-        </button>
-      </div>
+      <button
+        onClick={saveQuiz}
+        disabled={!isFormValid() || isLoading}
+        className={`px-6 py-3 text-white rounded ${isLoading ? "bg-gray-400" : "bg-green-500 hover:bg-green-600"}`}
+      >
+        {isLoading ? "Enregistrement..." : "Sauvegarder le Quiz"}
+      </button>
     </div>
   );
 };
