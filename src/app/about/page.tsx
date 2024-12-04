@@ -1,28 +1,65 @@
-'use client'; // Marque le fichier comme un composant client
+'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
+import axios from 'axios';
+import { FaTrash } from 'react-icons/fa'; // Icône de suppression
+
+interface Suggestion {
+    id: number;
+    text: string;
+}
 
 export default function About() {
     const [suggestion, setSuggestion] = useState('');
-    const [suggestionsList, setSuggestionsList] = useState([]);
+    const [suggestionsList, setSuggestionsList] = useState<Suggestion[]>([]);
 
-    const handleSuggestionChange = (e) => {
+    // Récupérer les suggestions depuis l'API
+    useEffect(() => {
+        const fetchSuggestions = async () => {
+            try {
+                const response = await axios.get('/api/sugg');
+                setSuggestionsList(response.data);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des suggestions', error);
+            }
+        };
+
+        fetchSuggestions();
+    }, []); // Se lance au montage du composant
+
+    // Gérer le changement dans la zone de texte
+    const handleSuggestionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setSuggestion(e.target.value);
     };
 
-    const handleSubmit = (e) => {
+    // Soumettre une nouvelle suggestion
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (suggestion.trim()) {
-            // Ajouter la suggestion à la liste
-            setSuggestionsList([...suggestionsList, suggestion]);
-            setSuggestion(''); // Réinitialiser le champ après soumission
+            try {
+                const response = await axios.post('/api/sugg', { text: suggestion });
+                setSuggestionsList(prevState => [...prevState, response.data]);
+                setSuggestion(''); // Réinitialiser le champ après soumission
+            } catch (error) {
+                console.error('Erreur lors de l\'envoi de la suggestion', error);
+            }
+        }
+    };
+
+    // Supprimer une suggestion en fonction de l'ID
+    const handleDelete = async (id: number) => {
+        try {
+            await axios.delete(`/api/sugg/${id}`);
+            setSuggestionsList(prevState => prevState.filter(suggestion => suggestion.id !== id));
+        } catch (error) {
+            console.error('Erreur lors de la suppression de la suggestion', error);
         }
     };
 
     return (
         <Layout>
-            <div className="flex justify-between items-start p-6 max-w-7xl mx-auto bg-gray-50 rounded-lg shadow-lg">
+            <div className="flex justify-between items-start p-6 max-w-7xl mx-auto bg-gray-50 rounded-lg shadow-lg mt-10">
                 {/* Partie gauche - À propos */}
                 <div className="w-2/3 pr-6">
                     <h1 className="text-3xl font-bold text-gray-800 mb-4">À propos</h1>
@@ -44,9 +81,9 @@ export default function About() {
                                 value={suggestion}
                                 onChange={handleSuggestionChange}
                                 placeholder="Écrivez ici votre suggestion de film..."
-                                rows="4"
+                                rows={4}
                                 required
-                                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-black"
                             />
                         </div>
                         <button
@@ -65,9 +102,17 @@ export default function About() {
                         {suggestionsList.length === 0 ? (
                             <p className="text-gray-600">Aucune suggestion pour le moment.</p>
                         ) : (
-                            suggestionsList.map((suggestion, index) => (
-                                <div key={index} className="p-3 bg-white border rounded-lg shadow-sm">
-                                    <p className="text-gray-700">{suggestion}</p>
+                            suggestionsList.map((suggestion) => (
+                                <div key={suggestion.id} className="p-3 bg-white border rounded-lg shadow-sm flex justify-between items-center space-x-2">
+                                    <p className="text-gray-700 break-words max-w-full text-ellipsis overflow-hidden" style={{ wordWrap: 'break-word' }}>
+                                        {suggestion.text}
+                                    </p>
+                                    <button
+                                        onClick={() => handleDelete(suggestion.id)}
+                                        className="text-red-500 hover:text-red-700"
+                                    >
+                                        <FaTrash />
+                                    </button>
                                 </div>
                             ))
                         )}

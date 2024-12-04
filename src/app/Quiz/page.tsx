@@ -108,6 +108,14 @@ export default function QuizPage() {
               >
                 <h2 className="text-lg font-bold text-black">{quiz.title}</h2>
                 <p className="text-sm text-gray-700">{quiz.description}</p>
+                {/* Affichage de l'image si elle existe */}
+                {quiz.image && (
+                  <img
+                    src={quiz.image}
+                    alt={quiz.title}
+                    className="h-32 w-full object-cover rounded mt-2"
+                  />
+                )}
                 <div className="flex justify-between items-center mt-4">
                   <Link href={`/quiz/${quiz.id}`}>
                     <button className="text-green-500 hover:text-green-700">

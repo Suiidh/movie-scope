@@ -177,8 +177,7 @@ const CreateQuizPage = () => {
           ))}
         </div>
 
-        {/* Bouton Ajouter une question aligné à gauche */}
-        <div className="mb-4 flex justify-start">
+        <div className="mb-4 flex justify-center">
           <button
             type="button"
             onClick={addQuestion}

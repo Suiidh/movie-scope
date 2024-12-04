@@ -30,7 +30,7 @@ model Quiz {
   id          Int        @id @default(autoincrement())  // Identifiant unique du quiz
   title       String     // Titre du quiz
   description String?    // Description du quiz (optionnel)
-  imageUrl    String?
+  image       String?
   questions   Question[] // Relation vers les questions du quiz
 }
 
@@ -47,4 +47,10 @@ model Option {
   value      String
   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade) // Cascade pour supprimer les options liées à une question
   questionId Int
+}
+
+model Suggestion {
+  id        Int      @id @default(autoincrement())
+  text      String
+  createdAt DateTime @default(now())
 }
