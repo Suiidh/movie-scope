@@ -1,10 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation"; // Importez useRouter
 import Layout from "../../components/Layout";
 
 export default function QuizDetailPage() {
   const { id } = useParams();
+  const router = useRouter();  // Utilisez le hook useRouter pour la navigation
   const [quiz, setQuiz] = useState<any>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -62,6 +63,10 @@ export default function QuizDetailPage() {
     }
   };
 
+  const handleBackToQuizList = () => {
+    router.push("/quiz");  // Redirige vers la page de liste des quiz
+  };
+
   return (
     <Layout>
       <div className="flex flex-col items-center min-h-screen px-4 py-8 sm:px-12 bg-black">
@@ -84,6 +89,13 @@ export default function QuizDetailPage() {
                 <p className="text-sm sm:text-base text-gray-300 mt-2">
                   Votre score final est : {score} sur {quiz.questions.length}
                 </p>
+                {/* Bouton pour revenir à la liste des quiz */}
+                <button
+                  onClick={handleBackToQuizList}
+                  className="mt-4 px-4 py-2 bg-blue-500 text-white text-sm sm:text-base font-semibold rounded-md hover:bg-blue-600"
+                >
+                  Retour à la liste des quiz
+                </button>
               </div>
             ) : (
               <>

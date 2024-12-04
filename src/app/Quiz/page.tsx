@@ -2,15 +2,18 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { FaTrash, FaEdit, FaPlay } from "react-icons/fa"; // Import des icônes
+import { FaTrash, FaEdit, FaPlay, FaTimes } from "react-icons/fa"; 
 import Layout from "../components/Layout";
+import { useRouter } from "next/navigation";  // Pour gérer la redirection
 
 export default function QuizPage() {
   const [quizz, setQuizz] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null); // Message de succès
+  const [showSuccess, setShowSuccess] = useState<boolean>(false); // Pour afficher/masquer le message de succès
+  const router = useRouter();
 
-  // Fonction pour récupérer les quiz
   useEffect(() => {
     const fetchQuizz = async () => {
       try {
@@ -18,6 +21,20 @@ export default function QuizPage() {
         if (!response.ok) throw new Error("Erreur lors de la récupération des quiz.");
         const data = await response.json();
         setQuizz(data);
+
+        // Vérification de la query "success" dans l'URL pour afficher le message de succès
+        const success = new URLSearchParams(window.location.search).get('success');
+        const action = new URLSearchParams(window.location.search).get('action'); // Récupérer l'action
+
+        if (success === 'true') {
+          // Déterminer si c'est une création ou une modification
+          if (action === 'create') {
+            setSuccessMessage("Quiz créé avec succès !");
+          } else if (action === 'edit') {
+            setSuccessMessage("Quiz modifié avec succès !");
+          }
+          setShowSuccess(true); // Afficher le message de succès
+        }
       } catch (error) {
         console.error("Erreur :", error);
         setError("Erreur lors de la récupération des quiz.");
@@ -27,25 +44,33 @@ export default function QuizPage() {
     fetchQuizz();
   }, []);
 
-  // Fonction pour supprimer un quiz
+  // Fonction pour gérer la suppression d'un quiz
   const deleteQuiz = async (id: number) => {
     if (!confirm("Êtes-vous sûr de vouloir supprimer ce quiz ?")) return;
 
-    setLoading(true); // On active le message de chargement
-    setError(null); // On réinitialise l'erreur en cas de nouvelle tentative de suppression
+    setLoading(true); 
+    setError(null);
 
     try {
-      console.log(`Deleting quiz with ID: ${id}`);
       const response = await fetch(`/api/quizz/${id}`, { method: "DELETE" });
       if (!response.ok) throw new Error("Erreur lors de la suppression du quiz.");
 
-      setQuizz(quizz.filter((quiz) => quiz.id !== id)); // On met à jour la liste des quiz après suppression
+      // Met à jour la liste des quiz après suppression
+      setQuizz(quizz.filter((quiz) => quiz.id !== id));
+
+      setSuccessMessage("Quiz supprimé avec succès !");
+      setShowSuccess(true); // Afficher le message de succès
     } catch (error) {
       console.error("Erreur :", error);
       setError("Erreur lors de la suppression du quiz.");
     } finally {
-      setLoading(false); // Désactivation du message de chargement
+      setLoading(false);
     }
+  };
+
+  // Fonction pour gérer la fermeture du message de succès
+  const closeSuccessMessage = () => {
+    setShowSuccess(false); // Fermer le message de succès
   };
 
   return (
@@ -59,6 +84,16 @@ export default function QuizPage() {
             </button>
           </Link>
         </div>
+
+        {/* Affichage du message de succès */}
+        {showSuccess && successMessage && (
+          <div className="flex items-center justify-between bg-green-500 text-white p-4 rounded mb-4">
+            <span>{successMessage}</span>
+            <button onClick={closeSuccessMessage} className="text-white">
+              <FaTimes size={20} />
+            </button>
+          </div>
+        )}
 
         {error && <div className="text-red-500 mb-4">{error}</div>}
 
