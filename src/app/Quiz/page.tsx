@@ -4,14 +4,14 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FaTrash, FaEdit, FaPlay, FaTimes } from "react-icons/fa"; 
 import Layout from "../components/Layout";
-import { useRouter } from "next/navigation";  // Pour gérer la redirection
+import { useRouter } from "next/navigation";  
 
 export default function QuizPage() {
   const [quizz, setQuizz] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null); // Message de succès
-  const [showSuccess, setShowSuccess] = useState<boolean>(false); // Pour afficher/masquer le message de succès
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [showSuccess, setShowSuccess] = useState<boolean>(false); 
   const router = useRouter();
 
   useEffect(() => {
@@ -22,18 +22,16 @@ export default function QuizPage() {
         const data = await response.json();
         setQuizz(data);
 
-        // Vérification de la query "success" dans l'URL pour afficher le message de succès
         const success = new URLSearchParams(window.location.search).get('success');
-        const action = new URLSearchParams(window.location.search).get('action'); // Récupérer l'action
+        const action = new URLSearchParams(window.location.search).get('action'); 
 
         if (success === 'true') {
-          // Déterminer si c'est une création ou une modification
           if (action === 'create') {
             setSuccessMessage("Quiz créé avec succès !");
           } else if (action === 'edit') {
             setSuccessMessage("Quiz modifié avec succès !");
           }
-          setShowSuccess(true); // Afficher le message de succès
+          setShowSuccess(true); 
         }
       } catch (error) {
         console.error("Erreur :", error);
@@ -44,7 +42,6 @@ export default function QuizPage() {
     fetchQuizz();
   }, []);
 
-  // Fonction pour gérer la suppression d'un quiz
   const deleteQuiz = async (id: number) => {
     if (!confirm("Êtes-vous sûr de vouloir supprimer ce quiz ?")) return;
 
@@ -55,11 +52,9 @@ export default function QuizPage() {
       const response = await fetch(`/api/quizz/${id}`, { method: "DELETE" });
       if (!response.ok) throw new Error("Erreur lors de la suppression du quiz.");
 
-      // Met à jour la liste des quiz après suppression
       setQuizz(quizz.filter((quiz) => quiz.id !== id));
-
       setSuccessMessage("Quiz supprimé avec succès !");
-      setShowSuccess(true); // Afficher le message de succès
+      setShowSuccess(true); 
     } catch (error) {
       console.error("Erreur :", error);
       setError("Erreur lors de la suppression du quiz.");
@@ -68,9 +63,8 @@ export default function QuizPage() {
     }
   };
 
-  // Fonction pour gérer la fermeture du message de succès
   const closeSuccessMessage = () => {
-    setShowSuccess(false); // Fermer le message de succès
+    setShowSuccess(false); 
   };
 
   return (
@@ -85,7 +79,6 @@ export default function QuizPage() {
           </Link>
         </div>
 
-        {/* Affichage du message de succès */}
         {showSuccess && successMessage && (
           <div className="flex items-center justify-between bg-green-500 text-white p-4 rounded mb-4">
             <span>{successMessage}</span>
@@ -106,16 +99,15 @@ export default function QuizPage() {
                 key={quiz.id}
                 className="h-56 w-56 border p-4 rounded shadow-lg flex flex-col justify-between bg-white hover:shadow-xl transition-shadow"
               >
-                <h2 className="text-lg font-bold text-black">{quiz.title}</h2>
-                <p className="text-sm text-gray-700">{quiz.description}</p>
-                {/* Affichage de l'image si elle existe */}
                 {quiz.image && (
                   <img
-                    src={quiz.image}
-                    alt={quiz.title}
-                    className="h-32 w-full object-cover rounded mt-2"
+                    src={`/uploads/${quiz.image}`} // Utilisation d'un chemin local
+                    alt="Quiz Image"
+                    className="w-full h-32 object-cover rounded-t mb-4"
                   />
                 )}
+                <h2 className="text-lg font-bold text-black">{quiz.title}</h2>
+                <p className="text-sm text-gray-700">{quiz.description}</p>
                 <div className="flex justify-between items-center mt-4">
                   <Link href={`/quiz/${quiz.id}`}>
                     <button className="text-green-500 hover:text-green-700">
