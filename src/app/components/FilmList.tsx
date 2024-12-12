@@ -94,7 +94,7 @@ const FilmList = ({ films }: FilmListProps) => {
 
           h2 {
             font-size: 1.8em;
-            color: #fff;
+            color: #000000;
             margin-bottom: 20px;
           }
 

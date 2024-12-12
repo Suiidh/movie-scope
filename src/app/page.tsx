@@ -39,7 +39,7 @@ export default async function Home() {
 
   return (
     <Layout>
-      <div className="container">
+      <div className="flex:1">
         <section className="recent-movies">
           <FilmList films={recentMovies} />
         </section>
