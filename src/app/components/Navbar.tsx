@@ -28,7 +28,7 @@ export default function Navbar() {
           {/* Logo à gauche */}
           <div style={logoStyles}><Link href="/" style={linkStyles}>
             <img
-                src="/path/to/logo.png" // Remplacez par le chemin vers votre logo
+                src="public/images/logo.PNG" // Remplacez par le chemin vers votre logo
                 alt="Logo du site"
                 style={logoImageStyles}
             />
