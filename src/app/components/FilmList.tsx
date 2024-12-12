@@ -19,7 +19,6 @@ type FilmListProps = {
 const FilmList = ({ films }: FilmListProps) => {
   const router = useRouter();
 
-  // Filtrer les films récents (par exemple, sortis au cours des 6 derniers mois)
   const filmsRecents = films.filter((film) => {
     const dateSortie = new Date(film.dateSortie);
     const sixMonthsAgo = new Date();
@@ -27,8 +26,9 @@ const FilmList = ({ films }: FilmListProps) => {
     return dateSortie >= sixMonthsAgo;
   });
 
-  // Filtrer les films recommandés (par exemple, avec une note > 4)
-  const filmsRecommandes = films.filter((film) => film.avis > 4);
+  const filmsRecommandes = films.filter(
+      (film) => film.avis > 4 && !filmsRecents.includes(film)
+  );
 
   const handleViewDetails = (id: number) => {
     router.push(`/film/${id}`);
@@ -38,25 +38,35 @@ const FilmList = ({ films }: FilmListProps) => {
       <main className="main-container">
         <div className="page-container">
           {/* Films récents */}
-          <section className="mb-16">
+          <section>
             <h2>Films récents</h2>
             <div className="grid-container">
               {filmsRecents.map((film) => (
-                  <div
-                      key={film.id}
-                      className="movie-card"
-                  >
-                    <img
-                        src={film.image}
-                        alt={film.titre}
-                        className="movie-image"
-                    />
+                  <div key={film.id} className="movie-card">
+                    <img src={film.image} alt={film.titre} className="movie-image" />
                     <div className="movie-info">
                       <h3>{film.titre}</h3>
                       <p>{film.description}</p>
-                      <button
-                          onClick={() => handleViewDetails(film.id)}
-                      >
+                      <button onClick={() => handleViewDetails(film.id)}>
+                        Voir les détails
+                      </button>
+                    </div>
+                  </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Films recommandés */}
+          <section>
+            <h2>Films recommandés</h2>
+            <div className="grid-container">
+              {filmsRecommandes.map((film) => (
+                  <div key={film.id} className="movie-card">
+                    <img src={film.image} alt={film.titre} className="movie-image" />
+                    <div className="movie-info">
+                      <h3>{film.titre}</h3>
+                      <p>{film.description}</p>
+                      <button onClick={() => handleViewDetails(film.id)}>
                         Voir les détails
                       </button>
                     </div>
@@ -65,38 +75,9 @@ const FilmList = ({ films }: FilmListProps) => {
             </div>
           </section>
         </div>
-          {/* Films recommandés */}
-        <section>
-          <div className="page-container">
-            <h2>Films recommandés</h2>
-            <div className="grid-container">
-              {filmsRecommandes.map((film) => (
-                  <div
-                      key={film.id}
-                      className="movie-card"
-                  >
-                    <img
-                        src={film.image}
-                        alt={film.titre}
-                        className="movie-image"
-                    />
-                    <div className="movie-info">
-                      <h3>{film.titre}</h3>
-                      <p>{film.description}</p>
-                      <button
-                          onClick={() => handleViewDetails(film.id)}
-                      >
-                        Voir les détails
-                      </button>
-                    </div>
-                  </div>
-              ))}
-            </div>
-          </div>
-        </section>
 
-  <style jsx>{`
-    .main-container {
+        <style jsx>{`
+          .main-container {
             width: 100%;
             padding: 20px;
             display: flex;
