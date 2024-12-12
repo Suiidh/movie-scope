@@ -68,63 +68,62 @@ export default function FilmsPage() {
                         {filmsFiltres.map((film) => (
                             <div
                                 key={film.id}
+                                className="film-card"
                                 style={{
                                     position: 'relative',
                                     border: '1px solid #ccc',
                                     padding: '1rem',
                                     borderRadius: '5px',
-                                    overflow: 'hidden'
+                                    overflow: 'hidden',
                                 }}
                             >
                                 <img
-                                    src={`${film.image}`} // Chemin vers l'image
+                                    src={film.image} // Chemin vers l'image
                                     alt={film.titre}
                                     style={{ width: '100%', borderRadius: '5px', transition: 'opacity 0.3s' }}
                                 />
                                 <h2>{film.titre}</h2>
                                 <p>Durée: {film.duree}h</p>
                                 <div
+                                    className="description-hover"
                                     style={{
                                         position: 'absolute',
-                                        top: '0',
-                                        left: '0',
-                                        right: '0',
-                                        bottom: '0',
-                                        backgroundColor: 'rgba(0, 0, 0, 0.8)', // Arrière-plan sombre
-                                        color: 'white',
+                                        inset: '0',
                                         display: 'flex',
                                         justifyContent: 'center',
                                         alignItems: 'center',
-                                        opacity: '0', // Commence à zéro
                                         transition: 'opacity 0.3s',
                                         padding: '10px',
                                         textAlign: 'center',
-                                        zIndex: 1, // Assure que le texte est au-dessus de l'image
+                                        zIndex: -1, // Assure que le texte est au-dessus de l'image
                                     }}
-                                    className="description-hover"
                                 >
-                                    <p style={{
-                                        margin: 0,
-                                        color: 'white', // Couleur du texte blanche
-                                        textShadow: '1px 1px 3px rgba(0, 0, 0, 0.7)', // Ombre pour le texte
-                                    }}>
+                                    <p
+                                        style={{
+                                            margin: 0,
+                                            color: 'black', // Couleur du texte
+                                            textShadow: '1px 1px 3px rgba(0, 0, 0, 0.7)', // Ombre pour le texte
+                                            width: 400,
+                                        }}
+                                    >
                                         {film.description}
                                     </p>
                                 </div>
-                                {/* Change l'opacité sur le survol de l'image */}
-                                <style jsx>{`
-                  div:hover .description-hover {
-                    opacity: 1; // Rend visible la description au survol
-                  }
-                  div:hover img {
-                    opacity: 0; // Rend l'image invisible lors du survol
-                  }
-                `}</style>
                             </div>
                         ))}
                     </div>
                 )}
             </div>
+
+            {/* Style CSS pour l'effet hover */}
+            <style jsx>{`
+                .film-card:hover .description-hover {
+                    opacity: 1; // Rendre la description visible au survol
+                }
+                .film-card:hover img {
+                    opacity: 0; // Rendre l'image invisible lors du survol
+                }
+            `}</style>
         </Layout>
     );
 }
