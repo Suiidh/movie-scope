@@ -64,9 +64,10 @@ const FilmList = ({ films }: FilmListProps) => {
               ))}
             </div>
           </section>
-
+        </div>
           {/* Films recommandés */}
-          <section>
+        <section>
+          <div className="page-container">
             <h2>Films recommandés</h2>
             <div className="grid-container">
               {filmsRecommandes.map((film) => (
@@ -91,11 +92,11 @@ const FilmList = ({ films }: FilmListProps) => {
                   </div>
               ))}
             </div>
-          </section>
-        </div>
+          </div>
+        </section>
 
-        <style jsx>{`
-          .main-container {
+  <style jsx>{`
+    .main-container {
             width: 100%;
             padding: 20px;
             display: flex;
