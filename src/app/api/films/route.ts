@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import prisma from '../../lib/prisma';  // Chemin relatif vers Prisma
+import {prisma} from '../../lib/prisma';  // Chemin relatif vers Prisma
 
 export async function GET() {
   try {

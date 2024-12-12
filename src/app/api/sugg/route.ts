@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import prisma  from '../../lib/prisma'; // Assurez-vous que prisma est correctement importé
+import {prisma}  from '../../lib/prisma'; // Assurez-vous que prisma est correctement importé
 
 // Récupérer toutes les suggestions
 export async function GET() {

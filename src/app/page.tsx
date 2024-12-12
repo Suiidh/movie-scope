@@ -1,6 +1,6 @@
 // src/app/page.tsx (sans "use client")
 import Layout from './components/Layout';
-import prisma from './lib/prisma'; // Assurez-vous que prisma est bien configuré
+import {prisma} from './lib/prisma'; // Assurez-vous que prisma est bien configuré
 import FilmList from './components/FilmList'; // Composant client pour afficher les films
 
 type Film = {

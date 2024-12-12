@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import prisma  from '../../../lib/prisma'; // Assurez-vous que le chemin vers prisma est correct
+import {prisma}  from '../../../lib/prisma'; // Assurez-vous que le chemin vers prisma est correct
 
 // Supprimer une suggestion spécifique en fonction de l'ID dans l'URL
 export async function DELETE(req: Request) {
