@@ -24,6 +24,7 @@ model User {
   nomUsers  String @map("nom_users")             // Correspond au champ nom_users
   mdp       String                                // Champ mdp
   email     String @unique                       // Champ email unique
+  role      String @default("user")
 }
 
 model Quiz {
