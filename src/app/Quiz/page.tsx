@@ -16,6 +16,8 @@ export default function QuizPage() {
   const [quizToDelete, setQuizToDelete] = useState<any | null>(null); // Quiz à supprimer
   const [showEditModal, setShowEditModal] = useState<boolean>(false); // Modale de modification
   const [quizToEdit, setQuizToEdit] = useState<any | null>(null); // Quiz à modifier
+  const [currentPage, setCurrentPage] = useState(1);
+  const [quizzPerPage] = useState(5);
   const router = useRouter();
 
   useEffect(() => {
@@ -108,14 +110,16 @@ export default function QuizPage() {
           <div className="w-full flex justify-between items-center mb-10">
             <h1 className="text-4xl font-bold text-white">Liste des Quiz</h1>
             <Link href="/createquiz">
-              <button className="px-6 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+              <button className="px-6 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-transform hover:scale-105">
                 Ajouter un Quiz
               </button>
             </Link>
           </div>
 
           {showSuccess && successMessage && (
-              <div className="flex items-center justify-between bg-red-600 text-white p-4 rounded mb-4">
+              <div
+                  className="flex items-center justify-between bg-red-600 text-white p-4 rounded mb-4 animate-fade-in"
+              >
                 <span>{successMessage}</span>
                 <button onClick={closeSuccessMessage} className="text-white">
                   <FaTimes size={20} />
@@ -132,7 +136,7 @@ export default function QuizPage() {
                 {currentQuizzes.map((quiz) => (
                     <div
                         key={quiz.id}
-                        className="h-56 w-56 border border-red-600 p-4 rounded-lg shadow-lg flex flex-col justify-between bg-gray-800 hover:shadow-xl transition-shadow"
+                        className="h-64 w-64 border p-4 rounded-lg shadow-lg bg-gray-800 hover:shadow-xl transition-shadow flex flex-col justify-between"
                     >
                       {quiz.image && (
                           <img
@@ -142,11 +146,11 @@ export default function QuizPage() {
                           />
                       )}
                       <h2 className="text-lg font-bold text-white">{quiz.title}</h2>
-                      <p className="text-sm text-gray-300">{quiz.description}</p>
+                      <p className="text-sm text-gray-300 line-clamp-2">{quiz.description}</p>
                       <div className="flex justify-between items-center mt-4">
                         <Link href={`/quiz/${quiz.id}`}>
                           <button className="text-red-600 hover:text-red-700">
-                            <FaPlay size={20}/>
+                            <FaPlay size={20} />
                           </button>
                         </Link>
                         <button
@@ -233,7 +237,7 @@ export default function QuizPage() {
                             currentPage === index + 1
                                 ? "bg-red-600 text-white"
                                 : "bg-gray-800 text-white hover:bg-red-600"
-                        }`}
+                        } transition-transform hover:scale-105`}
                     >
                       {index + 1}
                     </button>
