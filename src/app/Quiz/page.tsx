@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
@@ -6,9 +6,29 @@ import { FaTrash, FaEdit, FaPlay, FaTimes } from "react-icons/fa";
 import Layout from "../components/Layout";
 import Link from "next/link";
 
+// Définir les types
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+}
+
+interface Session {
+  user: User | null;
+  expires: string;
+}
+
+interface Quiz {
+  id: number;
+  title: string;
+  description: string;
+  image?: string;
+}
+
 export default function QuizPage() {
-  const { data: session } = useSession(); // Utilisation de next-auth pour récupérer la session
-  const [quizz, setQuizz] = useState<any[]>([]);
+  const { data: session } = useSession<Session>(); // Typage explicite de session
+  const [quizz, setQuizz] = useState<Quiz[]>([]); // Utilisation du type Quiz[]
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -142,4 +162,3 @@ export default function QuizPage() {
       </Layout>
   );
 }
-
