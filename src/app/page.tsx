@@ -1,6 +1,6 @@
 // src/app/page.tsx (sans "use client")
 import Layout from './components/Layout';
-import {prisma} from './lib/prisma'; // Assurez-vous que prisma est bien configuré
+import { prisma } from './lib/prisma'; // Assurez-vous que prisma est bien configuré
 import FilmList from './components/FilmList'; // Composant client pour afficher les films
 
 type Film = {
@@ -38,16 +38,20 @@ export default async function Home() {
   const { recentMovies, recommendedMovies } = await fetchFilms();
 
   return (
-    <Layout>
-      <div className="flex:1">
-        <section className="recent-movies">
-          <FilmList films={recentMovies} />
-        </section>
+      <Layout>
+        <div className="flex flex-col items-center px-4 py-10 bg-black text-white">
+          {/* Films récents */}
+          <section className="recent-movies mb-16 w-full max-w-7xl mx-auto">
+            <h2 className="text-4xl font-bold text-red-600 mb-6 text-center">Films récents</h2>
+            <FilmList films={recentMovies} />
+          </section>
 
-        <section className="recommendations">
-          <FilmList films={recommendedMovies} />
-        </section>
-      </div>
-    </Layout>
+          {/* Films recommandés */}
+          <section className="recommendations w-full max-w-7xl mx-auto">
+            <h2 className="text-4xl font-bold text-red-600 mb-6 text-center">Films recommandés</h2>
+            <FilmList films={recommendedMovies} />
+          </section>
+        </div>
+      </Layout>
   );
 }
