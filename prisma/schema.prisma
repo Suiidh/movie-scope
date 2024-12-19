@@ -15,7 +15,7 @@ model Film {
   duree       Int                                   // Durée du film en minutes
   avis        Float?   @default(0.0)                // Note moyenne du film (optionnel, par défaut à 0)
   dateSortie  DateTime                              // Date de sortie du film
-
+  comments    Comment[]                             // Relation avec les commentaires
   @@map("films")                                    // Renomme la table en "films"
 }
 
@@ -24,6 +24,17 @@ model User {
   nomUsers  String @map("nom_users")             // Correspond au champ nom_users
   mdp       String                                // Champ mdp
   email     String @unique                       // Champ email unique
+  comments  Comment[]                            // Relation avec les commentaires
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  film      Film     @relation(fields: [filmId], references: [id])
+  filmId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
 }
 
 model Quiz {
