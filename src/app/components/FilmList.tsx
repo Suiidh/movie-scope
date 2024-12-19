@@ -37,7 +37,7 @@ const FilmList = ({ films }: FilmListProps) => {
   };
 
   return (
-      <main className="bg-black min-h-screen text-white py-10">
+      <main className="min-h-screen text-white py-10">
         <div className="w-full mx-auto text-center py-4">
           {/* Films recommandés */}
           <section>

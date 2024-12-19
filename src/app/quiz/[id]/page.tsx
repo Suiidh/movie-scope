@@ -69,7 +69,7 @@ export default function QuizDetailPage() {
 
   return (
     <Layout>
-      <div className="flex flex-col items-center min-h-screen px-4 py-8 sm:px-12 bg-black">
+      <div className="flex flex-col items-center min-h-screen px-4 py-8 sm:px-12">
         {/* Conteneur principal */}
         <div className="w-full max-w-6xl flex flex-col sm:flex-row gap-6">
           {/* Section Quiz */}

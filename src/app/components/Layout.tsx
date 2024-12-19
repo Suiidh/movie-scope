@@ -18,7 +18,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     <div className="flex space-x-6 text-lg">
                         <Link href="/" className="hover:text-red-600">Accueil</Link>
                         <Link href="/about" className="hover:text-red-600">À propos</Link>
-                        <Link href="/privacy" className="hover:text-red-600">Politique de confidentialité</Link>
                     </div>
                 </div>
             </footer>

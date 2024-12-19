@@ -39,7 +39,7 @@ export default async function Home() {
 
   return (
       <Layout>
-        <div className="flex flex-col items-center px-4 py-10 bg-black text-white">
+        <div className="flex flex-col items-center px-4 py-10 text-white">
           {/* Films récents */}
           <section className="recent-movies mb-16 w-full max-w-7xl mx-auto">
             <h2 className="text-4xl font-bold text-red-600 mb-6 text-center">Films récents</h2>

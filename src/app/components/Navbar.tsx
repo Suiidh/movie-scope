@@ -31,8 +31,11 @@ export default function Navbar() {
 
   return (
       <nav
-          className={`fixed w-full top-0 z-50 ${isScrolled ? "bg-black bg-opacity-80 shadow-md" : "bg-black"} p-4 transition-all duration-300`}
-          style={{ top: 0 }}
+          className={`${
+              isScrolled
+                  ? "fixed bg-black bg-opacity-80 shadow-md"
+                  : "relative bg-black"
+          } w-full top-0 z-50 p-4 transition-all duration-300`}
       >
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           {/* Logo et texte à gauche */}

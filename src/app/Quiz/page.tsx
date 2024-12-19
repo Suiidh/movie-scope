@@ -79,7 +79,7 @@ export default function QuizPage() {
 
   return (
       <Layout>
-        <div className="flex flex-col items-center min-h-screen px-4 py-8 sm:px-12 bg-black">
+        <div className="flex flex-col items-center min-h-screen px-4 py-8 sm:px-12">
           <div className="w-full flex justify-between items-center mb-10">
             <h1 className="text-4xl font-bold text-white">Liste des Quiz</h1>
             <Link href="/createquiz">
