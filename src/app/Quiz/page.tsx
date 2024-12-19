@@ -17,7 +17,7 @@ export default function QuizPage() {
   const [showEditModal, setShowEditModal] = useState<boolean>(false); // Modale de modification
   const [quizToEdit, setQuizToEdit] = useState<any | null>(null); // Quiz à modifier
   const [currentPage, setCurrentPage] = useState(1);
-  const [quizzPerPage] = useState(5);
+  const [quizzPerPage] = useState(5); // Laissez cette ligne telle quelle
   const router = useRouter();
 
   useEffect(() => {
@@ -95,8 +95,6 @@ export default function QuizPage() {
   };
 
   // Gestion de la pagination
-  const quizzPerPage = 5; // Nombre de quiz par page
-  const [currentPage, setCurrentPage] = useState(1);
   const indexOfLastQuiz = currentPage * quizzPerPage;
   const indexOfFirstQuiz = indexOfLastQuiz - quizzPerPage;
   const currentQuizzes = quizz.slice(indexOfFirstQuiz, indexOfLastQuiz);
