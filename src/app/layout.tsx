@@ -1,6 +1,8 @@
-import type { Metadata } from "next";
+// app/layout.tsx
+import { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import ClientSessionProvider from './components/ClientSessionProvider.tsx'; // Importer le composant Client
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -19,17 +21,16 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+                                     children,
+                                   }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="fr">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <html lang="fr">
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      {/* Utilisation du ClientSessionProvider pour rendre la session disponible côté client */}
+      <ClientSessionProvider>
         {children}
+      </ClientSessionProvider>
       </body>
-    </html>
+      </html>
   );
 }
