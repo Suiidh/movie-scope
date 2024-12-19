@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -83,131 +83,139 @@ const CreateQuizPage = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-8 bg-white shadow rounded">
-      <h1 className="text-3xl font-bold mb-6 text-center text-black">Créer un Quiz</h1>
+      <div className="max-w-4xl mx-auto p-8 bg-black text-white shadow-lg rounded">
+        <h1 className="text-3xl font-bold mb-6 text-center text-red-600">Créer un Quiz</h1>
 
-      {/* Message de succès */}
-      {showSuccess && successMessage && (
-        <div className="flex items-center justify-between bg-green-500 text-white p-4 rounded mb-4">
-          <span>{successMessage}</span>
-          <button onClick={closeSuccessMessage} className="text-white">
-            <FaTimes size={20} />
-          </button>
-        </div>
-      )}
+        {/* Bouton Retour */}
+        <button
+            onClick={() => router.back()}
+            className="mb-6 text-white bg-gray-700 hover:bg-gray-800 py-2 px-4 rounded flex items-center"
+        >
+          <FaTimes className="mr-2" size={20} /> Retour
+        </button>
 
-      {/* Formulaire de création de quiz */}
-      <form onSubmit={(e) => e.preventDefault()}>
-        <div className="mb-4">
-          <label className="block text-lg font-medium text-black">Titre du Quiz</label>
-          <input
-            type="text"
-            value={quizTitle}
-            onChange={(e) => setQuizTitle(e.target.value)}
-            className="w-full p-3 mt-2 border border-gray-300 rounded text-black"
-            placeholder="Entrez le titre du quiz"
-            required
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-lg font-medium text-black">Description</label>
-          <textarea
-            value={quizDescription}
-            onChange={(e) => setQuizDescription(e.target.value)}
-            className="w-full p-3 mt-2 border border-gray-300 rounded text-black"
-            placeholder="Entrez la description du quiz"
-            required
-          ></textarea>
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-lg font-medium text-black">Questions</label>
-          {questions.map((q, index) => (
-            <div key={index} className="mb-4 border p-4 rounded bg-gray-50">
-              <label className="block text-md font-medium text-black">Question</label>
-              <input
-                type="text"
-                value={q.question}
-                onChange={(e) => handleQuestionChange(index, "question", e.target.value)}
-                className="w-full p-3 mt-2 border border-gray-300 rounded text-black"
-                placeholder="Entrez la question"
-                required
-              />
-
-              <div className="mt-2">
-                <label className="block text-md font-medium text-black">Options</label>
-                {q.options.map((option, optIndex) => (
-                  <input
-                    key={optIndex}
-                    type="text"
-                    value={option}
-                    onChange={(e) => {
-                      const updatedOptions = [...q.options];
-                      updatedOptions[optIndex] = e.target.value;
-                      handleQuestionChange(index, "options", updatedOptions);
-                    }}
-                    className="w-full p-3 mt-2 border border-gray-300 rounded text-black"
-                    placeholder={`Option ${optIndex + 1}`}
-                    required
-                  />
-                ))}
-              </div>
-
-              <div className="mt-2">
-                <label className="block text-md font-medium text-black">Réponse Correcte</label>
-                <input
-                  type="text"
-                  value={q.answer}
-                  onChange={(e) => handleQuestionChange(index, "answer", e.target.value)}
-                  className="w-full p-3 mt-2 border border-gray-300 rounded text-black"
-                  placeholder="Entrez la réponse correcte"
-                  required
-                />
-              </div>
-
-              <button
-                type="button"
-                onClick={() => removeQuestion(index)}
-                className="mt-2 px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600"
-              >
-                Supprimer cette question
+        {/* Message de succès */}
+        {showSuccess && successMessage && (
+            <div className="flex items-center justify-between bg-green-600 text-white p-4 rounded mb-4">
+              <span>{successMessage}</span>
+              <button onClick={closeSuccessMessage} className="text-white">
+                <FaTimes size={20} />
               </button>
             </div>
-          ))}
-        </div>
+        )}
 
-        <div className="mb-4 flex justify-center">
-          <button
-            type="button"
-            onClick={addQuestion}
-            className="px-6 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
-          >
-            Ajouter une question
-          </button>
-        </div>
+        {/* Formulaire de création de quiz */}
+        <form onSubmit={(e) => e.preventDefault()}>
+          <div className="mb-4">
+            <label className="block text-lg font-medium text-white">Titre du Quiz</label>
+            <input
+                type="text"
+                value={quizTitle}
+                onChange={(e) => setQuizTitle(e.target.value)}
+                className="w-full p-3 mt-2 border border-gray-300 rounded text-black"
+                placeholder="Entrez le titre du quiz"
+                required
+            />
+          </div>
 
-        <div className="mb-4">
-          <label className="block text-lg font-medium text-black">Image du Quiz (facultatif)</label>
-          <input
-            type="file"
-            onChange={(e) => setImage(e.target.files ? e.target.files[0] : null)}
-            className="w-full p-3 mt-2 border border-gray-300 rounded text-black"
-          />
-        </div>
+          <div className="mb-4">
+            <label className="block text-lg font-medium text-white">Description</label>
+            <textarea
+                value={quizDescription}
+                onChange={(e) => setQuizDescription(e.target.value)}
+                className="w-full p-3 mt-2 border border-gray-300 rounded text-black"
+                placeholder="Entrez la description du quiz"
+                required
+            ></textarea>
+          </div>
 
-        <div className="mb-4 flex justify-center">
-          <button
-            type="submit"
-            onClick={saveQuiz}
-            disabled={isLoading}
-            className="px-6 py-3 bg-green-500 text-white font-bold rounded hover:bg-green-600 disabled:opacity-50"
-          >
-            {isLoading ? "Enregistrement..." : "Créer le Quiz"}
-          </button>
-        </div>
-      </form>
-    </div>
+          <div className="mb-4">
+            <label className="block text-lg font-medium text-white">Questions</label>
+            {questions.map((q, index) => (
+                <div key={index} className="mb-4 border p-4 rounded bg-gray-800">
+                  <label className="block text-md font-medium text-white">Question</label>
+                  <input
+                      type="text"
+                      value={q.question}
+                      onChange={(e) => handleQuestionChange(index, "question", e.target.value)}
+                      className="w-full p-3 mt-2 border border-gray-300 rounded text-black"
+                      placeholder="Entrez la question"
+                      required
+                  />
+
+                  <div className="mt-2">
+                    <label className="block text-md font-medium text-white">Options</label>
+                    {q.options.map((option, optIndex) => (
+                        <input
+                            key={optIndex}
+                            type="text"
+                            value={option}
+                            onChange={(e) => {
+                              const updatedOptions = [...q.options];
+                              updatedOptions[optIndex] = e.target.value;
+                              handleQuestionChange(index, "options", updatedOptions);
+                            }}
+                            className="w-full p-3 mt-2 border border-gray-300 rounded text-black"
+                            placeholder={`Option ${optIndex + 1}`}
+                            required
+                        />
+                    ))}
+                  </div>
+
+                  <div className="mt-2">
+                    <label className="block text-md font-medium text-white">Réponse Correcte</label>
+                    <input
+                        type="text"
+                        value={q.answer}
+                        onChange={(e) => handleQuestionChange(index, "answer", e.target.value)}
+                        className="w-full p-3 mt-2 border border-gray-300 rounded text-black"
+                        placeholder="Entrez la réponse correcte"
+                        required
+                    />
+                  </div>
+
+                  <button
+                      type="button"
+                      onClick={() => removeQuestion(index)}
+                      className="mt-2 px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600"
+                  >
+                    Supprimer cette question
+                  </button>
+                </div>
+            ))}
+          </div>
+
+          <div className="mb-4 flex justify-center">
+            <button
+                type="button"
+                onClick={addQuestion}
+                className="px-6 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
+            >
+              Ajouter une question
+            </button>
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-lg font-medium text-white">Image du Quiz (facultatif)</label>
+            <input
+                type="file"
+                onChange={(e) => setImage(e.target.files ? e.target.files[0] : null)}
+                className="w-full p-3 mt-2 border border-gray-300 rounded text-black"
+            />
+          </div>
+
+          <div className="mb-4 flex justify-center">
+            <button
+                type="submit"
+                onClick={saveQuiz}
+                disabled={isLoading}
+                className="px-6 py-3 bg-green-600 text-white font-bold rounded hover:bg-green-700 disabled:opacity-50"
+            >
+              {isLoading ? "Enregistrement..." : "Créer le Quiz"}
+            </button>
+          </div>
+        </form>
+      </div>
   );
 };
 
