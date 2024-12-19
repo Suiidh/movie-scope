@@ -1,47 +1,35 @@
 import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../../lib/prisma";
 
-const prisma = new PrismaClient();
-
-export const authOptions = {
-    adapter: PrismaAdapter(prisma),
+export default NextAuth({
     providers: [
-        CredentialsProvider({
-            name: "Credentials",
-            credentials: {
-                email: { label: "Email", type: "email" },
-                password: { label: "Password", type: "password" },
-            },
-            async authorize(credentials) {
-                const user = await prisma.user.findUnique({
-                    where: { email: credentials?.email },
-                });
-
-                if (user && user.mdp === credentials?.password) {
-                    return user;
-                }
-
-                return null; // Si l'utilisateur n'est pas trouvé ou les credentials sont invalides
-            },
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         }),
     ],
+    adapter: PrismaAdapter(prisma),
     session: {
-        strategy: "jwt", // Utilisation de JWT pour les sessions
+        strategy: 'jwt', // Utilisation du JWT pour la gestion des sessions
     },
     callbacks: {
-        async session({ session, user }) {
+        async jwt({ token, user }) {
+            // Ajout des informations utilisateur dans le JWT
             if (user) {
-                // Ajout du rôle dans la session
-                session.user.role = user.role;
+                token.id = user.id;
+                token.role = user.role; // Assure-toi que l'utilisateur a un champ 'role' dans la base de données
+            }
+            return token;
+        },
+        async session({ session, token }) {
+            // Ajout des informations du JWT dans la session
+            if (token) {
+                session.user.id = token.id;
+                session.user.role = token.role; // Ajout du rôle dans la session
             }
             return session;
         },
     },
-    pages: {
-        signIn: '/auth/signin', // Redirige vers une page personnalisée de connexion
-    },
-};
-
-export default NextAuth(authOptions);
+});
