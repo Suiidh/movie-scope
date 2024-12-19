@@ -108,14 +108,14 @@ export default function QuizPage() {
           <div className="w-full flex justify-between items-center mb-10">
             <h1 className="text-4xl font-bold text-white">Liste des Quiz</h1>
             <Link href="/createquiz">
-              <button className="px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+              <button className="px-6 py-2 bg-red-600 text-white rounded hover:bg-red-700">
                 Ajouter un Quiz
               </button>
             </Link>
           </div>
 
           {showSuccess && successMessage && (
-              <div className="flex items-center justify-between bg-green-500 text-white p-4 rounded mb-4">
+              <div className="flex items-center justify-between bg-red-600 text-white p-4 rounded mb-4">
                 <span>{successMessage}</span>
                 <button onClick={closeSuccessMessage} className="text-white">
                   <FaTimes size={20} />
@@ -132,7 +132,7 @@ export default function QuizPage() {
                 {currentQuizzes.map((quiz) => (
                     <div
                         key={quiz.id}
-                        className="h-56 w-56 border p-4 rounded shadow-lg flex flex-col justify-between bg-white hover:shadow-xl transition-shadow"
+                        className="h-56 w-56 border border-red-600 p-4 rounded-lg shadow-lg flex flex-col justify-between bg-gray-800 hover:shadow-xl transition-shadow"
                     >
                       {quiz.image && (
                           <img
@@ -141,25 +141,25 @@ export default function QuizPage() {
                               className="w-full h-32 object-cover rounded-t mb-4"
                           />
                       )}
-                      <h2 className="text-lg font-bold text-black">{quiz.title}</h2>
-                      <p className="text-sm text-gray-700">{quiz.description}</p>
+                      <h2 className="text-lg font-bold text-white">{quiz.title}</h2>
+                      <p className="text-sm text-gray-300">{quiz.description}</p>
                       <div className="flex justify-between items-center mt-4">
                         <Link href={`/quiz/${quiz.id}`}>
-                          <button className="text-green-500 hover:text-green-700">
-                            <FaPlay size={20} />
+                          <button className="text-red-600 hover:text-red-700">
+                            <FaPlay size={20}/>
                           </button>
                         </Link>
                         <button
                             onClick={() => openEditModal(quiz)}
-                            className="text-blue-500 hover:text-blue-700"
+                            className="text-white hover:text-gray-400"
                         >
-                          <FaEdit size={20} />
+                          <FaEdit size={20}/>
                         </button>
                         <button
                             onClick={() => openDeleteModal(quiz)}
-                            className="text-red-500 hover:text-red-700"
+                            className="text-red-600 hover:text-red-700"
                         >
-                          <FaTrash size={20} />
+                          <FaTrash size={20}/>
                         </button>
                       </div>
                     </div>
@@ -207,9 +207,7 @@ export default function QuizPage() {
                   </p>
                   <div className="flex justify-center gap-4">
                     <Link href={`/editquiz/${quizToEdit?.id}`}>
-                      <button
-                          className="px-4 py-2 bg-blue-500 rounded text-white hover:bg-blue-600"
-                      >
+                      <button className="px-4 py-2 bg-red-600 rounded text-white hover:bg-red-700">
                         Modifier
                       </button>
                     </Link>
@@ -233,8 +231,8 @@ export default function QuizPage() {
                         onClick={() => paginate(index + 1)}
                         className={`px-4 py-2 rounded-md ${
                             currentPage === index + 1
-                                ? "bg-green-500 text-white"
-                                : "bg-gray-800 text-white hover:bg-green-500"
+                                ? "bg-red-600 text-white"
+                                : "bg-gray-800 text-white hover:bg-red-600"
                         }`}
                     >
                       {index + 1}
