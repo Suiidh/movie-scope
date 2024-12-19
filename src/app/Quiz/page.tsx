@@ -13,7 +13,7 @@ export default function QuizPage() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [quizzPerPage] = useState(5); // Nombre de quiz par page
+  const [quizzPerPage] = useState(5);
   const router = useRouter();
 
   useEffect(() => {
@@ -24,13 +24,13 @@ export default function QuizPage() {
         const data = await response.json();
         setQuizz(data);
 
-        const success = new URLSearchParams(window.location.search).get('success');
-        const action = new URLSearchParams(window.location.search).get('action');
+        const success = new URLSearchParams(window.location.search).get("success");
+        const action = new URLSearchParams(window.location.search).get("action");
 
-        if (success === 'true') {
-          if (action === 'create') {
+        if (success === "true") {
+          if (action === "create") {
             setSuccessMessage("Quiz créé avec succès !");
-          } else if (action === 'edit') {
+          } else if (action === "edit") {
             setSuccessMessage("Quiz modifié avec succès !");
           }
           setShowSuccess(true);
@@ -69,7 +69,6 @@ export default function QuizPage() {
     setShowSuccess(false);
   };
 
-  // Gestion de la pagination
   const indexOfLastQuiz = currentPage * quizzPerPage;
   const indexOfFirstQuiz = indexOfLastQuiz - quizzPerPage;
   const currentQuizzes = quizz.slice(indexOfFirstQuiz, indexOfLastQuiz);
@@ -83,14 +82,16 @@ export default function QuizPage() {
           <div className="w-full flex justify-between items-center mb-10">
             <h1 className="text-4xl font-bold text-white">Liste des Quiz</h1>
             <Link href="/createquiz">
-              <button className="px-6 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+              <button className="px-6 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-transform hover:scale-105">
                 Ajouter un Quiz
               </button>
             </Link>
           </div>
 
           {showSuccess && successMessage && (
-              <div className="flex items-center justify-between bg-red-600 text-white p-4 rounded mb-4">
+              <div
+                  className="flex items-center justify-between bg-red-600 text-white p-4 rounded mb-4 animate-fade-in"
+              >
                 <span>{successMessage}</span>
                 <button onClick={closeSuccessMessage} className="text-white">
                   <FaTimes size={20} />
@@ -107,7 +108,7 @@ export default function QuizPage() {
                 {currentQuizzes.map((quiz) => (
                     <div
                         key={quiz.id}
-                        className="h-64 w-64 border p-4 rounded-lg shadow-lg bg-gray-800 hover:shadow-xl transition-shadow flex flex-col justify-between"
+                        className="h-64 w-64 border p-4 rounded-lg shadow-lg bg-gray-800 hover:shadow-xl transition-all duration-300 animate-fade-in hover:scale-105 flex flex-col justify-between"
                     >
                       {quiz.image && (
                           <img
@@ -117,21 +118,21 @@ export default function QuizPage() {
                           />
                       )}
                       <h2 className="text-lg font-bold text-white">{quiz.title}</h2>
-                      <p className="text-sm text-gray-300">{quiz.description}</p>
+                      <p className="text-sm text-gray-300 line-clamp-2">{quiz.description}</p>
                       <div className="flex justify-between items-center mt-4">
                         <Link href={`/quiz/${quiz.id}`}>
-                          <button className="text-red-600 hover:text-red-700">
+                          <button className="text-red-600 hover:text-red-700 transition-transform hover:scale-110">
                             <FaPlay size={20} />
                           </button>
                         </Link>
                         <Link href={`/editquiz/${quiz.id}`}>
-                          <button className="text-white hover:text-gray-400">
+                          <button className="text-white hover:text-gray-400 transition-transform hover:scale-110">
                             <FaEdit size={20} />
                           </button>
                         </Link>
                         <button
                             onClick={() => deleteQuiz(quiz.id)}
-                            className="text-red-600 hover:text-red-700"
+                            className="text-red-600 hover:text-red-700 transition-transform hover:scale-110"
                         >
                           <FaTrash size={20} />
                         </button>
@@ -153,7 +154,7 @@ export default function QuizPage() {
                             currentPage === index + 1
                                 ? "bg-red-600 text-white"
                                 : "bg-gray-800 text-white hover:bg-red-600"
-                        }`}
+                        } transition-transform hover:scale-105`}
                     >
                       {index + 1}
                     </button>

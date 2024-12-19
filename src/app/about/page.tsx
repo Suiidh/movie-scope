@@ -13,6 +13,7 @@ interface Suggestion {
 export default function About() {
     const [suggestion, setSuggestion] = useState('');
     const [suggestionsList, setSuggestionsList] = useState<Suggestion[]>([]);
+    const [deleting, setDeleting] = useState<number | null>(null); // Pour ajouter une animation de suppression
 
     // Récupérer les suggestions depuis l'API
     useEffect(() => {
@@ -39,7 +40,10 @@ export default function About() {
         if (suggestion.trim()) {
             try {
                 const response = await axios.post('/api/sugg', { text: suggestion });
-                setSuggestionsList(prevState => [...prevState, response.data]);
+                setSuggestionsList((prevState) => [
+                    ...prevState,
+                    { ...response.data, new: true }, // Ajouter une propriété pour l'animation d'entrée
+                ]);
                 setSuggestion(''); // Réinitialiser le champ après soumission
             } catch (error) {
                 console.error('Erreur lors de l\'envoi de la suggestion', error);
@@ -49,11 +53,16 @@ export default function About() {
 
     // Supprimer une suggestion en fonction de l'ID
     const handleDelete = async (id: number) => {
+        setDeleting(id); // Marquer l'élément comme en cours de suppression
         try {
             await axios.delete(`/api/sugg/${id}`);
-            setSuggestionsList(prevState => prevState.filter(suggestion => suggestion.id !== id));
+            setSuggestionsList((prevState) =>
+                prevState.filter((suggestion) => suggestion.id !== id)
+            );
         } catch (error) {
             console.error('Erreur lors de la suppression de la suggestion', error);
+        } finally {
+            setDeleting(null); // Réinitialiser l'état
         }
     };
 
@@ -62,18 +71,24 @@ export default function About() {
             <div className="max-w-screen-xl mx-auto p-6 bg-black text-white rounded-lg shadow-lg mt-10 m-4 flex flex-col lg:flex-row">
                 {/* Partie gauche - À propos */}
                 <div className="lg:w-2/3 pr-6 mb-6 lg:mb-0">
-                <h1 className="text-3xl font-bold text-red-600 mb-4">À propos</h1>
+                    <h1 className="text-3xl font-bold text-red-600 mb-4">À propos</h1>
                     <p className="text-lg text-gray-300 mb-4">
                         Bienvenue sur notre blog de cinéma où l'on partage nos avis et critiques sur divers films. Ici, vous trouverez des recommandations, des analyses et des discussions autour des œuvres cinématographiques que nous aimons et découvrons.
                     </p>
                     <p className="text-lg text-gray-300 mb-6">
-                        Ce blog a été créé par <strong className="text-red-600">Lucas Martin</strong>, <strong className="text-red-600">Enzo Marion</strong>, <strong className="text-red-600">Jordan Pipet</strong>, des passionnés de cinéma qui aiment explorer chaque aspect du 7e art. Que vous soyez amateur de films classiques ou de nouveautés, vous trouverez ici une source d'inspiration pour vos prochaines séances cinéma. Alors n'hésitez pas à partager vos avis avec nous.
+                        Ce blog a été créé par{' '}
+                        <strong className="text-red-600">Lucas Martin</strong>,{' '}
+                        <strong className="text-red-600">Enzo Marion</strong>,{' '}
+                        <strong className="text-red-600">Jordan Pipet</strong>, des passionnés de cinéma qui aiment explorer chaque aspect du 7e art. Que vous soyez amateur de films classiques ou de nouveautés, vous trouverez ici une source d'inspiration pour vos prochaines séances cinéma. Alors n'hésitez pas à partager vos avis avec nous.
                     </p>
 
                     <h2 className="text-2xl font-semibold text-red-600 mb-4">Faites-nous une suggestion !</h2>
                     <form onSubmit={handleSubmit}>
                         <div className="mb-4">
-                            <label htmlFor="suggestion" className="block text-lg font-semibold text-gray-300 mb-2">
+                            <label
+                                htmlFor="suggestion"
+                                className="block text-lg font-semibold text-gray-300 mb-2"
+                            >
                                 Votre suggestion de film :
                             </label>
                             <textarea
@@ -83,12 +98,12 @@ export default function About() {
                                 placeholder="Écrivez ici votre suggestion de film..."
                                 rows={4}
                                 required
-                                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600 text-black"
+                                className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600 text-black transition duration-200 ease-in-out transform hover:scale-105"
                             />
                         </div>
                         <button
                             type="submit"
-                            className="w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-600"
+                            className="w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-600 transform transition duration-200 hover:scale-105"
                         >
                             Envoyer
                         </button>
@@ -103,8 +118,20 @@ export default function About() {
                             <p className="text-gray-500">Aucune suggestion pour le moment.</p>
                         ) : (
                             suggestionsList.map((suggestion) => (
-                                <div key={suggestion.id} className="p-3 bg-gray-700 border rounded-lg shadow-sm flex justify-between items-center space-x-2 hover:bg-gray-600 transition">
-                                    <p className="text-gray-300 break-words max-w-full text-ellipsis overflow-hidden" style={{ wordWrap: 'break-word' }}>
+                                <div
+                                    key={suggestion.id}
+                                    className={`p-3 bg-gray-700 border rounded-lg shadow-sm flex justify-between items-center space-x-2 transition transform ${
+                                        deleting === suggestion.id
+                                            ? 'animate-wiggle'
+                                            : 'hover:scale-105 hover:bg-gray-600'
+                                    }`}
+                                >
+                                    <p
+                                        className={`text-gray-300 break-words max-w-full ${
+                                            suggestion.new ? 'animate-fadeIn' : ''
+                                        }`}
+                                        style={{ wordWrap: 'break-word' }}
+                                    >
                                         {suggestion.text}
                                     </p>
                                     <button

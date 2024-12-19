@@ -1,6 +1,6 @@
 "use client"; // Déclare ce composant comme un composant client
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 type Film = {
   id: number;
@@ -29,7 +29,7 @@ const FilmList = ({ films }: FilmListProps) => {
 
   // Filtrer les films recommandés : films avec un avis > 4 et non récents
   const filmsRecommandes = films.filter(
-      (film) => film.avis > 4 && !filmsRecents.some(f => f.id === film.id) // Exclure les films récents
+      (film) => film.avis > 4 && !filmsRecents.some((f) => f.id === film.id) // Exclure les films récents
   );
 
   const handleViewDetails = (id: number) => {
@@ -46,17 +46,21 @@ const FilmList = ({ films }: FilmListProps) => {
                   filmsRecommandes.map((film) => (
                       <div
                           key={film.id}
-                          className="relative bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all flex flex-col"
+                          className="relative bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all flex flex-col animate-fade-in hover:scale-105 group"
                       >
                         <img
                             src={film.image}
                             alt={film.titre}
                             className="w-full h-[400px] object-cover transition-opacity duration-300"
                         />
+                        {/* Superposition pour un effet au survol */}
+                        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity duration-300"></div>
                         {/* Conteneur de la description */}
-                        <div className="flex-grow p-6 bg-gray-900 rounded-b-lg">
+                        <div className="flex-grow p-6 bg-gray-900 rounded-b-lg relative z-10">
                           <h3 className="text-2xl font-bold">{film.titre}</h3>
-                          <p className="text-sm text-gray-300 line-clamp-3">{film.description}</p>
+                          <p className="text-sm text-gray-300 line-clamp-3">
+                            {film.description}
+                          </p>
                           <button
                               onClick={() => handleViewDetails(film.id)}
                               className="mt-4 px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
@@ -67,7 +71,9 @@ const FilmList = ({ films }: FilmListProps) => {
                       </div>
                   ))
               ) : (
-                  <p className="text-gray-300">Aucun film recommandé disponible.</p>
+                  <p className="text-gray-300">
+                    Aucun film recommandé disponible.
+                  </p>
               )}
             </div>
           </section>

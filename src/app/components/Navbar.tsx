@@ -57,33 +57,41 @@ export default function Navbar() {
             <li>
               <Link
                   href="/"
-                  className="text-white text-lg font-bold py-2 px-4 rounded hover:bg-red-600 transition-colors duration-300"
+                  className="text-white text-lg font-bold py-2 px-4 rounded relative group"
               >
                 Accueil
+                <span
+                    className="absolute left-0 bottom-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full"></span>
               </Link>
             </li>
             <li>
               <Link
                   href="/films"
-                  className="text-white text-lg font-bold py-2 px-4 rounded hover:bg-red-600 transition-colors duration-300"
+                  className="text-white text-lg font-bold py-2 px-4 rounded relative group"
               >
                 Films
+                <span
+                    className="absolute left-0 bottom-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full"></span>
               </Link>
             </li>
             <li>
               <Link
                   href="/quiz"
-                  className="text-white text-lg font-bold py-2 px-4 rounded hover:bg-red-600 transition-colors duration-300"
+                  className="text-white text-lg font-bold py-2 px-4 rounded relative group"
               >
                 Quiz
+                <span
+                    className="absolute left-0 bottom-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full"></span>
               </Link>
             </li>
             <li>
               <Link
                   href="/about"
-                  className="text-white text-lg font-bold py-2 px-4 rounded hover:bg-red-600 transition-colors duration-300"
+                  className="text-white text-lg font-bold py-2 px-4 rounded relative group"
               >
                 À propos
+                <span
+                    className="absolute left-0 bottom-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full"></span>
               </Link>
             </li>
           </ul>
@@ -92,15 +100,22 @@ export default function Navbar() {
           <div className="flex space-x-4">
             {!user ? (
                 <>
+                  {/* Connexion - Bouton rouge clair */}
                   <Link
                       href="/login"
-                      className="bg-red-600 text-white py-2 px-6 rounded-lg text-lg font-bold hover:bg-red-700 transition-all duration-300"
+                      className="bg-red-500 text-white py-2 px-6 rounded-lg text-lg font-bold
+          hover:bg-red-700 hover:scale-105 hover:shadow-md
+          transition-all duration-300"
                   >
                     Connexion
                   </Link>
+
+                  {/* Inscription - Bouton rouge foncé */}
                   <Link
                       href="/register"
-                      className="bg-red-700 text-white py-2 px-6 rounded-lg text-lg font-bold hover:bg-red-800 transition-all duration-300"
+                      className="bg-red-900 text-white py-2 px-6 rounded-lg text-lg font-bold
+          hover:bg-red-900 hover:scale-105 hover:shadow-md
+          transition-all duration-300"
                   >
                     Inscription
                   </Link>
@@ -110,7 +125,9 @@ export default function Navbar() {
                   <span className="text-white text-lg font-bold">{user.name}</span>
                   <button
                       onClick={handleLogout}
-                      className="bg-red-600 text-white py-2 px-6 rounded-lg text-lg font-bold hover:bg-red-700 transition-all duration-300"
+                      className="bg-red-600 text-white py-2 px-6 rounded-lg text-lg font-bold
+          hover:bg-red-700 hover:scale-105 hover:shadow-md
+          transition-all duration-300"
                   >
                     Déconnexion
                   </button>
