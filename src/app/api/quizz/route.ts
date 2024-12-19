@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 // Méthode GET pour récupérer les quiz
-export async function GET(req: Request) {
+export async function GET() {
   try {
     const quizData = await prisma.quiz.findMany({
       include: {
